@@ -14,11 +14,11 @@ export const MainHeader: React.FC = () => {
                 </div>
                 <div className=" flex items-center ">
                     <div className="w-[48px] h-[48px] pr-5">
-                        <Image src={heartIcon} alt="heartIcon"></Image>
+                        <Image className="w-[48px] h-[48px]" src={heartIcon} alt="heartIcon"></Image>
                     </div>
                     <span className="h-[70px] border-slate-700  border-[1px]"></span>
                     <div className="w-[48px] h-[48px] pl-5">
-                        <Image src={profiletIcon} alt="profiletIcon"></Image>
+                        <Image className="w-[48px] h-[48px]" src={profiletIcon} alt="profiletIcon"></Image>
                     </div>
                 </div>
             </div>
