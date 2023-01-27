@@ -2,6 +2,7 @@ import { Inter } from '@next/font/google';
 import './globals.css';
 
 import { MainHeader } from '../src/components/firstLayout/MainHeader';
+import { MainFooter } from '../src/components/firstLayout/MainFooter';
 
 // If loading a variable font, you don't need to specify the font weight
 const inter = Inter({
@@ -17,6 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <body>
                 <MainHeader></MainHeader>
                 {children}
+                <MainFooter></MainFooter>
             </body>
         </html>
     );
