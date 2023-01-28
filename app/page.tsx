@@ -5,7 +5,7 @@ import { ViewedPets } from '../src/components/mainPage/viewedPets';
 import catIcon from '../public/assets/icons/cat.svg';
 import dogIcon from '../public/assets/icons/dog.svg';
 
-export default function Home() {
+export default async function Home() {
     return (
         <>
             <section className=" relative min-h-[500px] bg-[url('../public/assets/backgrounds/mainBacground.jpg')] py-40 px-3">
@@ -36,6 +36,7 @@ export default function Home() {
                 <h3 className=" sm:text-5xl text-3xl text-red-300 text-center">
                     Recently Viewed Pets
                 </h3>
+                {/* @ts-expect-error Server Component */}
                 <ViewedPets></ViewedPets>
             </section>
         </>
