@@ -1,8 +1,12 @@
 import Image from 'next/image';
 
+import ProfilePart  from './ProfilePart';
+
 import mainLogo from '../../../public/assets/icons/logo.svg';
 import heartIcon from '../../../public/assets/icons/heart.svg';
 import profiletIcon from '../../../public/assets/icons/profile.svg';
+
+
 
 export const MainHeader: React.FC = () => {
     return (
@@ -14,7 +18,7 @@ export const MainHeader: React.FC = () => {
 
                         <div className=" text-3xl text-red-300">PetProject</div>
                     </div>
-                    <div className=" flex items-center relative">
+                    {/* <div className=" flex items-center relative">
                         <div className="mr-5 cursor-pointer  hover:border-red-300  hover:border-[1px] rounded-lg transition-all">
                             <Image width={48} height={48} src={heartIcon} alt="heartIcon"></Image>
                         </div>
@@ -62,7 +66,8 @@ export const MainHeader: React.FC = () => {
                                 </a>
                             </li>
                         </ul>
-                    </div>
+                    </div> */}
+                    <ProfilePart></ProfilePart>
                 </div>
             </nav>
         </header>
