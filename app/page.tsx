@@ -1,14 +1,17 @@
 import Image from 'next/image';
 
-import { ViewedPets } from '../src/components/mainPage/viewedPets';
+import RecentPets from '../src/components/mainPage/RecentPets';
 
 import catIcon from '../public/assets/icons/cat.svg';
 import dogIcon from '../public/assets/icons/dog.svg';
 
+import CustomErrorBoundary from '../src/components/errorBoundary/customErrorBoundary';
+
+
 export default async function Home() {
     return (
         <>
-            <section className=" relative min-h-[500px] bg-[url('../public/assets/backgrounds/mainBacground.jpg')] py-40 px-3">
+            <section className=" relative min-h-[500px] bg-[url('../public/assets/backgrounds/mainBacground.jpg')] py-40 px-3 bg-no-repeat">
                 <h1 className=" text-center sm:text-5xl text-3xl text-red-300">
                     Find your new best friend
                 </h1>
@@ -36,8 +39,9 @@ export default async function Home() {
                 <h3 className=" sm:text-5xl text-3xl text-red-300 text-center">
                     Recently Viewed Pets
                 </h3>
-                {/* @ts-expect-error Server Component */}
-                <ViewedPets></ViewedPets>
+                <CustomErrorBoundary fallback={<div>Ошибка поймана</div>}>
+                    <RecentPets></RecentPets>
+                </CustomErrorBoundary>
             </section>
         </>
     );

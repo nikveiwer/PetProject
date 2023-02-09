@@ -4,34 +4,52 @@ import Image from 'next/image';
 
 import { useEffect } from 'react';
 
-import { getAuthData } from '../../service/fetching';
+import { PetsFetching } from '../../service/fetching';
 
 import { useAuthStore } from '../../store/authStore/authStore';
 
 import { observer } from 'mobx-react-lite';
 
+import { isAuthData } from '../../types/types';
+
 import heartIcon from '../../../public/assets/icons/heart.svg';
 import profiletIcon from '../../../public/assets/icons/profile.svg';
 
-import { IAuthAPI } from '../../types/types';
 
 const ProfilePart: React.FC = () => {
 
     const {accessToken, setAPIAuthData, accessTimeLeft} = useAuthStore();
 
+    const { status, setStatus, getAuthData} = PetsFetching()
+
     console.log(accessToken);
-    console.log(accessTimeLeft);
+    
+
+    const moveAPIAuth = async () => {
+
+        const data = await getAuthData()
+
+        if (isAuthData(data)) {
+            console.log(data);
+            setAPIAuthData(data);
+        } else {
+            setStatus("error");
+            throw new Error('Authorization data does not match');
+        }
+    }
 
     useEffect(() => {
-        getAuthData().then(data => {
-            setAPIAuthData(data)
-            console.log(data)
-        })
 
-       
+    
+        moveAPIAuth();
+
+        const intervalId = setInterval(moveAPIAuth, 3000000)
+    
+        return () => {clearInterval(intervalId)}
+        
     }, [])
 
-    if (accessToken) {
+    if (status === "idle") {
         return (
             <div className=" flex items-center relative">
                 <div className="mr-5 cursor-pointer  hover:border-red-300  hover:border-[1px] rounded-lg transition-all">
