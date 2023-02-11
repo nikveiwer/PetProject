@@ -4,10 +4,13 @@ export interface IAuthAPI {
     access_token: string;
 }
 
-
 export interface IAnimals {
     animals: any[];
     pagination: object;
+}
+
+export interface IAnimal {
+    animal: object;
 }
 
 export interface IPetCard {
@@ -15,7 +18,6 @@ export interface IPetCard {
     name: string;
     imagePath: string;
 }
-
 
 export function isAuthData(data: unknown): data is IAuthAPI {
     if (data && typeof data === 'object') {
@@ -25,10 +27,10 @@ export function isAuthData(data: unknown): data is IAuthAPI {
     return false;
 }
 
-export function isAnimals (data: unknown): data is IAnimals {
+export function isAnimals(data: unknown): data is IAnimals {
     if (data && typeof data === 'object') {
         return 'animals' in data;
     }
 
     return false;
-}  
+}
