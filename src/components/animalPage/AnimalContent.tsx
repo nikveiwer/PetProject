@@ -11,6 +11,9 @@ import { useAuthStore } from '../../store/authStore/authStore';
 
 import { PetsFetching } from '../../service/fetching';
 
+import { isAnimal } from '../../types/types';
+import { IPetInformation } from '../../types/types';
+
 type Props = {
     animalId: number;
 };
@@ -20,22 +23,23 @@ const AnimalContent: React.FC<Props> = ({ animalId }) => {
 
     console.log('pet');
 
-    const { getPets, status, setStatus } = PetsFetching();
+    const { getPets, status, setStatus, _tranformToPetInformation } = PetsFetching();
 
-    const [singleAnimal, setSingleAnimal] = useState<any>(null);
+    const [singleAnimal, setSingleAnimal] = useState<IPetInformation>(
+        null as any as IPetInformation,
+    );
 
     const getSinglePet = async (animalId: number, accessToken: string) => {
         const data = (await getPets('animals', '', accessToken, [String(animalId)])) as any;
 
         console.log(data);
 
-        // if (isAnimals(pets)) {
-        //     const petCardInfo = pets.animals.map((pet) => _tranformToPetCard(pet));
-        //     setPets(petCardInfo);
-        // } else {
-        //     setStatus('error');
-        //     throw new Error('Pets do not match(Recent)');
-        // }
+        if (isAnimal(data)) {
+            setSingleAnimal(_tranformToPetInformation(data.animal));
+        } else {
+            setStatus('error');
+            throw new Error('Pets do not match(Recent)');
+        }
     };
 
     useEffect(() => {
@@ -52,15 +56,23 @@ const AnimalContent: React.FC<Props> = ({ animalId }) => {
                 </div>
             );
         case 'idle':
-            return (
-                <>
-                    <AnimalSlider></AnimalSlider>
+            if (singleAnimal !== null) {
+                return (
+                    <>
+                        <AnimalSlider photos={singleAnimal.photos}></AnimalSlider>
 
-                    <section className=" mt-7">
-                        <AnimalInfo></AnimalInfo>
-                    </section>
-                </>
-            );
+                        <section className=" my-7 px-2 flex justify-around">
+                            <AnimalInfo singleAnimal={singleAnimal}></AnimalInfo>
+                        </section>
+                    </>
+                );
+            } else {
+                return (
+                    <div className=" py-9 px-3 flex justify-center gap-4 lg:flex-nowrap flex-wrap">
+                        Loading...
+                    </div>
+                );
+            }
         case 'error':
             return <div>Ошибка</div>;
     }

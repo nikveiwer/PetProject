@@ -1,6 +1,6 @@
 import { useHttp } from './request';
 
-import { IAuthAPI, IAnimals, isAuthData } from '../types/types';
+import { IAuthAPI, IAnimals, isAuthData, IPetInformation } from '../types/types';
 
 import { IPetCard } from '../types/types';
 
@@ -69,5 +69,36 @@ export const PetsFetching = () => {
         };
     };
 
-    return { status, setStatus, getAuthData, getPets, _tranformToPetCard };
+    const _tranformToPetInformation = (animal: any): IPetInformation => {
+        return {
+            name: animal.name,
+            photos:
+                animal.photos?.length > 0
+                    ? animal.photos.map((item: any) => {
+                          return {
+                              url: item.full,
+                          };
+                      })
+                    : null,
+            breed: animal.breeds.primary,
+            location: `${animal.contact.address.city}, ${animal.contact.address.state}`,
+            characteristics: `${animal.age}, ${animal.gender}, ${animal.size}, ${animal.colors.primary}`,
+            'house trained': animal.attributes.house_trained ? 'Yes' : 'No',
+            helth: 'Vacination up to date',
+            'good in a home with': `Other ${Object.entries(animal.environment)
+                .filter((item) => item[1] === true)
+                .map((item) => item[0])
+                .join(', ')}`,
+            description: animal.description,
+        };
+    };
+
+    return {
+        status,
+        setStatus,
+        getAuthData,
+        getPets,
+        _tranformToPetCard,
+        _tranformToPetInformation,
+    };
 };

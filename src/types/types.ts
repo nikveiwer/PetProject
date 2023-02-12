@@ -13,6 +13,22 @@ export interface IAnimal {
     animal: object;
 }
 
+export type Photos = {
+    url: string;
+};
+
+export interface IPetInformation {
+    name: string;
+    photos: Photos[] | null;
+    breed: string;
+    location: string;
+    characteristics: string;
+    'house trained': string;
+    helth: string;
+    'good in a home with': string;
+    description: string;
+}
+
 export interface IPetCard {
     id: number;
     name: string;
@@ -30,6 +46,14 @@ export function isAuthData(data: unknown): data is IAuthAPI {
 export function isAnimals(data: unknown): data is IAnimals {
     if (data && typeof data === 'object') {
         return 'animals' in data;
+    }
+
+    return false;
+}
+
+export function isAnimal(data: unknown): data is IAnimal {
+    if (data && typeof data === 'object') {
+        return 'animal' in data;
     }
 
     return false;
