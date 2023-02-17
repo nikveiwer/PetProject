@@ -90,6 +90,7 @@ export const PetsFetching = () => {
                 .map((item) => item[0])
                 .join(', ')}`,
             description: animal.description,
+            petLink: animal.url
         };
     };
 
