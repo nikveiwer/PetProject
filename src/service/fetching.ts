@@ -1,8 +1,13 @@
 import { useHttp } from './request';
 
-import { IAuthAPI, IAnimals, isAuthData, IPetInformation } from '../types/types';
-
-import { IPetCard } from '../types/types';
+import {
+    IAuthAPI,
+    IAnimals,
+    IPetInformation,
+    IPetCard,
+    IFilters,
+    isAuthData,
+} from '../types/types';
 
 export const PetsFetching = () => {
     const _API_KEY = 'rZUxT0Vf6i2o7KrrtdmKXlv7nad2RsR0Uk0B5EypuD4mUHJwYF';
@@ -61,6 +66,20 @@ export const PetsFetching = () => {
         return data;
     };
 
+    const getFilters = async (accsessToken: string) => {
+        const data = await requestWithErrHandle(
+            `https://api.petfinder.com/v2/types`,
+            'GET',
+            null,
+            {
+                Authorization: `Bearer ${accsessToken}`,
+            },
+            { cache: 'no-store' },
+        );
+
+        return data;
+    };
+
     const _tranformToPetCard = (animal: any): IPetCard => {
         return {
             id: animal.id,
@@ -90,15 +109,24 @@ export const PetsFetching = () => {
                 .map((item) => item[0])
                 .join(', ')}`,
             description: animal.description,
-            petLink: animal.url
+            petLink: animal.url,
         };
     };
+
+    // const _transformToFilters = (reqFil: any): IFilters=> {
+    //     return {
+    //         age: ["baby", "young", "adult", "senior"],
+    //         size: ["small", "medium", "large", "xlarge"],
+    //         gender:
+    //     };
+    // };
 
     return {
         status,
         setStatus,
         getAuthData,
         getPets,
+        getFilters,
         _tranformToPetCard,
         _tranformToPetInformation,
     };
