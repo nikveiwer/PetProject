@@ -1,47 +1,44 @@
+import { useState, useCallback } from 'react';
 
-
-
-import { useState, useCallback } from "react";
-
-type StatusType = "idle" | "loading" | "error";
-
+type StatusType = 'idle' | 'loading' | 'error';
 
 export const useHttp = () => {
+    const [status, setStatus] = useState<StatusType>('loading');
 
-    const [status, setStatus] = useState<StatusType>("idle");
+    const requestWithErrHandle = useCallback(
+        async (
+            url: string,
+            method: 'GET' | 'POST' | 'PUSH' | 'PULL' | 'DELETE' = 'GET',
+            body: any = null,
+            headers: any = { 'Content-Type': 'application/json' },
+            cacheParameters: any,
+        ): Promise<unknown> => {
+            setStatus('loading');
 
-    const requestWithErrHandle = useCallback(async (
-        url: string,
-        method: 'GET' | 'POST' | 'PUSH' | 'PULL' | 'DELETE' = 'GET',
-        body: any = null,
-        headers: any = { 'Content-Type': 'application/json' },
-        cacheParameters: any,
-    ): Promise<unknown> => {
+            try {
+                const response = await fetch(url, { method, body, headers, ...cacheParameters });
 
-        setStatus("loading");
+                if (!response.ok) {
+                    throw new Error(
+                        `Ohhh, my apologize, could not fetch ${url}, status: ${response.status}`,
+                    );
+                }
 
-        try {
-            const response = await fetch(url, { method, body, headers, ...cacheParameters });
-    
-            if (!response.ok) {
-                throw new Error(`Ohhh, my apologize, could not fetch ${url}, status: ${response.status}`);
+                const data = await response.json();
+
+                setStatus('idle');
+
+                return data as Promise<unknown>;
+            } catch (e) {
+                setStatus('error');
+                throw e;
             }
-    
-            const data = await response.json();
-
-            setStatus("idle");
-    
-            return data as Promise<unknown>;
-        } catch (e) {
-
-            setStatus("error");
-            throw e;
-        }
-    }, [])
+        },
+        [],
+    );
 
     return { status, setStatus, requestWithErrHandle };
-}
-
+};
 
 // export const usHttp = () => {
 //     const [loading, setLoading] = useState(false);
@@ -78,5 +75,3 @@ export const useHttp = () => {
 //     return {loading, error, request, clearError}
 
 // }
-
-    

@@ -49,6 +49,15 @@ export interface IFilters {
     color: string[];
 }
 
+export interface ICurrentFilters {
+    age: string;
+    size: string;
+    gender: string;
+    'good with': string;
+    'coat length': string;
+    color: string;
+}
+
 export function isAuthData(data: unknown): data is IAuthAPI {
     if (data && typeof data === 'object') {
         return 'access_token' in data;

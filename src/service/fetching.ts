@@ -113,13 +113,16 @@ export const PetsFetching = () => {
         };
     };
 
-    // const _transformToFilters = (reqFil: any): IFilters=> {
-    //     return {
-    //         age: ["baby", "young", "adult", "senior"],
-    //         size: ["small", "medium", "large", "xlarge"],
-    //         gender:
-    //     };
-    // };
+    const _transformToFilters = (reqFil: any): IFilters => {
+        return {
+            age: ['baby', 'young', 'adult', 'senior'],
+            size: ['small', 'medium', 'large', 'xlarge'],
+            gender: reqFil.genders,
+            'good with': ['children', 'cats', 'dogs'],
+            'coat length': reqFil.coats,
+            color: reqFil.colors,
+        };
+    };
 
     return {
         status,
@@ -129,5 +132,6 @@ export const PetsFetching = () => {
         getFilters,
         _tranformToPetCard,
         _tranformToPetInformation,
+        _transformToFilters,
     };
 };
