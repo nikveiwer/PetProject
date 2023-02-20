@@ -80,6 +80,20 @@ export const PetsFetching = () => {
         return data;
     };
 
+    const getBreeds = async (accsessToken: string, type: string) => {
+        const data = await requestWithErrHandle(
+            `https://api.petfinder.com/v2/types/${type.slice(0, -1)}/breeds`,
+            'GET',
+            null,
+            {
+                Authorization: `Bearer ${accsessToken}`,
+            },
+            { cache: 'no-store' },
+        );
+
+        return data;
+    };
+
     const _tranformToPetCard = (animal: any): IPetCard => {
         return {
             id: animal.id,
@@ -113,8 +127,11 @@ export const PetsFetching = () => {
         };
     };
 
-    const _transformToFilters = (reqFil: any): IFilters => {
+    const _transformToFilters = (reqFil: any, reqBreeds: any): IFilters => {
         return {
+            breed: reqBreeds.breeds.map((item: any) => {
+                return item.name
+            }),
             age: ['baby', 'young', 'adult', 'senior'],
             size: ['small', 'medium', 'large', 'xlarge'],
             gender: reqFil.genders,
@@ -130,6 +147,7 @@ export const PetsFetching = () => {
         getAuthData,
         getPets,
         getFilters,
+        getBreeds,
         _tranformToPetCard,
         _tranformToPetInformation,
         _transformToFilters,

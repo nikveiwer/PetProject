@@ -1,26 +1,33 @@
-import { Inter } from '@next/font/google';
-import './globals.css';
+import { Inter } from "@next/font/google";
+import "./globals.css";
 
-import { MainHeader } from '../src/components/firstLayout/MainHeader';
-import { MainFooter } from '../src/components/firstLayout/MainFooter';
+import { MainHeader } from "../src/components/firstLayout/MainHeader";
+import { MainFooter } from "../src/components/firstLayout/MainFooter";
 
-import AuthStoreProvider from '../src/store/authStore/authStoreProvider';
+import AuthStoreProvider from "../src/store/authStore/authStoreProvider";
+import FiltersStoreProvider from "../src/store/filtersStore/filtersStoreProvider";
 
 // If loading a variable font, you don't need to specify the font weight
 const inter = Inter({
-    subsets: ['latin'],
+    subsets: ["latin"],
     // default, can also use "swap" to ensure custom font always shows
-    display: 'optional',
+    display: "optional",
 });
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
     return (
         <html lang="en" className={inter.className}>
             <head />
             <body>
                 <AuthStoreProvider>
-                    <MainHeader></MainHeader>
-                    {children}
+                    <FiltersStoreProvider>
+                        <MainHeader></MainHeader>
+                        {children}
+                    </FiltersStoreProvider>
                 </AuthStoreProvider>
                 <MainFooter></MainFooter>
             </body>

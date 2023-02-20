@@ -17,6 +17,10 @@ export interface IRequestFilters {
     types: object[];
 }
 
+export interface IRequestBreeds {
+    breeds: object[];
+}
+
 export type Photos = {
     url: string;
 };
@@ -41,6 +45,7 @@ export interface IPetCard {
 }
 
 export interface IFilters {
+    breed: string[];
     age: string[];
     size: string[];
     gender: string[];
@@ -50,6 +55,7 @@ export interface IFilters {
 }
 
 export interface ICurrentFilters {
+    breed: string;
     age: string;
     size: string;
     gender: string;
@@ -85,6 +91,15 @@ export function isAnimal(data: unknown): data is IAnimal {
 export function isRequestFilters(data: unknown): data is IRequestFilters {
     if (data && typeof data === 'object') {
         return 'types' in data;
+    }
+
+    return false;
+}
+
+
+export function isRequestBreeds(data: unknown): data is IRequestBreeds {
+    if (data && typeof data === 'object') {
+        return 'breeds' in data;
     }
 
     return false;

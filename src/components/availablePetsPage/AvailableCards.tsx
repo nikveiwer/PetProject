@@ -11,11 +11,11 @@ import { isRequestFilters, isRequestBreeds, IFilters } from "../../types/types";
 
 import { SkeletonFilters } from "./SkeletonFilters";
 
-type Props = {
-    pet: "cats" | "dogs";
-};
+// type Props = {
+//     pet: "cats" | "dogs";
+// };
 
-const Filters: React.FC<Props> = ({ pet }) => {
+const AvailableCards: React.FC<> = ({ pet }) => {
     const { accessToken } = useAuthStore();
 
     const { status, setStatus, getFilters, getBreeds, _transformToFilters } =
