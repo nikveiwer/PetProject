@@ -1,32 +1,45 @@
-'use client';
+"use client";
 
-import { ChangeEvent, useState } from 'react';
+import { observer } from "mobx-react-lite";
+import { ChangeEvent, useState } from "react";
+import { useFiltersStore } from "../../store/filtersStore/filtersStore";
 
 const SortBy: React.FC = () => {
-    const [value, setValue] = useState('US');
+    // const [value, setValue] = useState("US");
+
+    // const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    //     setValue(e.target.value);
+    // };
+
+    const {
+        filters: { sort },
+        setRequiredFilter,
+    } = useFiltersStore();
 
     const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
-        setValue(e.target.value);
+        setRequiredFilter("sort", e.target.value);
     };
 
     return (
         <div className=" max-w-[250px] ml-2">
-            <label htmlFor="sortBy" className="block mb-2 text-sm text-gray-900">
+            <label
+                htmlFor="sortBy"
+                className="block mb-2 text-sm text-gray-900"
+            >
                 Sort By:
             </label>
             <select
                 id="sortBy"
-                value={value}
+                value={sort}
                 onChange={handleChange}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-300 focus:border-red-300 block w-full p-2.5 ">
-                <option value="US">United States</option>
-                <option value="CA">Canada</option>
-                <option value="FR">France</option>
-                <option value="DE">Germany</option>
-                <option value="BE">okfdkbkfdklbmfd</option>
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-300 focus:border-red-300 block w-full p-2.5 "
+            >
+                <option value="recent">Newest addition</option>
+                <option value="-recent">Oldest addition</option>
+                <option value="random">Randomize</option>
             </select>
         </div>
     );
 };
 
-export default SortBy;
+export default observer(SortBy);

@@ -45,22 +45,24 @@ export interface IPetCard {
 }
 
 export interface IFilters {
-    breed: string[];
-    age: string[];
-    size: string[];
+    // sort: ["random", "recent", "-recent"];
+    breed: string[]
+    age: ['baby', 'young', 'adult', 'senior'];
+    size: ['small', 'medium', 'large', 'xlarge'];
     gender: string[];
-    'good with': string[];
-    'coat length': string[];
+    'good_with': ['children', 'cats', 'dogs'];
+    coat: string[];
     color: string[];
 }
 
 export interface ICurrentFilters {
+    sort: "random" | "recent" | "-recent";
     breed: string;
-    age: string;
-    size: string;
+    age: "" | 'baby' | 'young' | 'adult' | 'senior';
+    size: "" | 'small' | 'medium' | 'large' | 'xlarge';
     gender: string;
-    'good with': string;
-    'coat length': string;
+    'good_with': "" | 'children' | 'cats' | 'dogs';
+    coat: string;
     color: string;
 }
 

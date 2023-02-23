@@ -1,81 +1,106 @@
 "use client";
 
-import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
+
 import { PetsFetching } from "../../service/fetching";
 
+import { PetCard } from "../mainPage/PetCard";
+import { SkeletonCard } from "../mainPage/SkeletonCard";
+
+import { ICurrentFilters, isAnimals } from "../../types/types";
+import { IAnimals } from "../../types/types";
+import { IPetCard } from "../../types/types";
+
+import { observer } from "mobx-react-lite";
 import { useAuthStore } from "../../store/authStore/authStore";
-import FilterItem from "./FilterItem";
+import { useFiltersStore } from "../../store/filtersStore/filtersStore";
 
-import { isRequestFilters, isRequestBreeds, IFilters } from "../../types/types";
+type Props = {
+    searchedType: "cats" | "dogs";
+};
 
-import { SkeletonFilters } from "./SkeletonFilters";
-
-// type Props = {
-//     pet: "cats" | "dogs";
-// };
-
-const AvailableCards: React.FC<> = ({ pet }) => {
+const AvailableCards: React.FC<Props> = ({ searchedType }) => {
     const { accessToken } = useAuthStore();
 
-    const { status, setStatus, getFilters, getBreeds, _transformToFilters } =
-        PetsFetching();
+    const { status, setStatus, getPets, _tranformToPetCard } = PetsFetching();
 
-    const [filters, setFilters] = useState<IFilters>(null as any as IFilters);
+    const { filters, setRequiredFilter } = useFiltersStore();
 
-    const allFiltersFetching = async (accessToken: string) => {
-        const types = await getFilters(accessToken);
+    const [pets, setPets] = useState<IPetCard[]>([]);
 
-        const breeds = await getBreeds(accessToken, pet);
+    const getAvailablePets = async (accessToken: string) => {
+        const searchParameters: (string | boolean)[][] = [];
 
-        console.log(breeds);
+        (Object.keys(filters) as Array<keyof ICurrentFilters>).forEach(
+            (key) => {
+                if (filters[key] !== "") {
+                    if (key === "good_with") {
+                        searchParameters.push([`${key}_${filters[key]}`, true]);
+                    } else {
+                        searchParameters.push([key, filters[key]]);
+                    }
+                }
+            }
+        );
 
-        console.log(types);
+        const pets = await getPets(
+            "animals",
+            "",
+            accessToken,
+            ["type", searchedType.slice(0, -1)],
+            ...searchParameters
+        );
 
-        if (isRequestFilters(types) && isRequestBreeds(breeds)) {
-            const filters = _transformToFilters(
-                pet === "dogs" ? types.types[0] : types.types[1],
-                breeds
+        console.log(pets);
+
+        if (isAnimals(pets)) {
+            const petCardInfo = pets.animals.map((pet) =>
+                _tranformToPetCard(pet)
             );
-            setFilters(filters);
-            console.log(filters);
+            setPets(petCardInfo);
         } else {
             setStatus("error");
-            throw new Error("Filters do not match(Available)");
+            throw new Error("Pets do not match(Recent)");
         }
     };
 
     useEffect(() => {
-        console.log("effect");
         if (accessToken) {
-            allFiltersFetching(accessToken);
+            getAvailablePets(accessToken);
         }
-    }, [accessToken]);
+    }, [accessToken, filters]);
+
+    // let status = "loading";
 
     switch (status) {
         case "loading":
             return (
-                <aside className="w-[250px]">
-                    <SkeletonFilters></SkeletonFilters>
-                </aside>
+                <div className=" py-9 px-3 grid 2xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-rows-3 auto-rows-auto gap-4 ">
+                    {[...new Array(12)].map((item, i) => {
+                        return <SkeletonCard key={i}></SkeletonCard>;
+                    })}
+                </div>
             );
         case "idle":
             return (
-                <aside className="w-[250px]">
-                    {Object.entries(filters).map((item) => {
+                <div className=" py-9 px-3 flex justify-center gap-4 lg:flex-nowrap flex-wrap">
+                    {/* {pets.map(({ id, name, imagePath }) => {
                         return (
-                            <FilterItem
-                                key={item[0]}
-                                filTitle={item[0] as keyof IFilters}
-                                filArray={item[1]}
-                            ></FilterItem>
+                            <PetCard
+                                key={id}
+                                id={id}
+                                imagePath={imagePath}
+                                name={name}
+                            ></PetCard>
                         );
-                    })}
-                </aside>
+                    })} */}
+                </div>
             );
         case "error":
+            return <div>Ошибка</div>;
+        default:
             return <div>Ошибка</div>;
     }
 };
 
-export default observer(Filters);
+export default observer(AvailableCards);

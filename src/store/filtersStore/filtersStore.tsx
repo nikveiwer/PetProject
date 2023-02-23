@@ -9,21 +9,50 @@ export default class FiltersStore {
         makeAutoObservable(this);
     }
 
-    breed: string = "";
-    age: string = "";
-    size: string = "";
-    gender: string = "";
-    "good with": string = "";
-    "coat length": string = "";
-    color: string = "";
+    filters: ICurrentFilters = {
+        sort: "recent",
+        breed: "",
+        age: "",
+        size: "",
+        gender: "",
+        good_with: "",
+        coat: "",
+        color: "",
+    };
 
     setRequiredFilter = (
         requiredFilter: keyof ICurrentFilters,
         value: string
     ) => {
         value === "any"
-            ? (this[requiredFilter] = "")
-            : (this[requiredFilter] = value);
+            ? (this.filters = {
+                  ...this.filters,
+                  [requiredFilter]: "",
+              })
+            : (this.filters = {
+                  ...this.filters,
+                  [requiredFilter]: value,
+              });
+    };
+
+    deleteRequiredFilter = (requiredFilter: keyof ICurrentFilters) => {
+        this.filters = {
+            ...this.filters,
+            [requiredFilter]: "",
+        };
+    };
+
+    deleteAllFilters = () => {
+        this.filters = {
+            sort: this.filters.sort,
+            breed: "",
+            age: "",
+            size: "",
+            gender: "",
+            good_with: "",
+            coat: "",
+            color: "",
+        };
     };
 }
 

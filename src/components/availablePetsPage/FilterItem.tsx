@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, ChangeEvent, use } from "react";
+import { useState, ChangeEvent, use, useEffect } from "react";
 
 import { observer } from "mobx-react-lite";
 
@@ -14,16 +14,11 @@ type Props = {
 };
 
 const FilterItem: React.FC<Props> = ({ filTitle, filArray }) => {
-    const [value, setValue] = useState("any");
-    const { setRequiredFilter } = useFiltersStore();
+    const { filters, setRequiredFilter } = useFiltersStore();
 
-    const filtersStore = useFiltersStore();
-
-    console.log(filtersStore);
+    console.log(filters[filTitle]);
 
     const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
-        setValue(e.target.value);
-
         setRequiredFilter(filTitle, e.target.value);
     };
 
@@ -37,7 +32,7 @@ const FilterItem: React.FC<Props> = ({ filTitle, filArray }) => {
             </label>
             <select
                 id="sortBy"
-                value={value}
+                value={filters[filTitle]}
                 onChange={handleChange}
                 className=" mb-7 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-300 focus:border-red-300 block w-full p-2.5 "
             >
@@ -54,4 +49,4 @@ const FilterItem: React.FC<Props> = ({ filTitle, filArray }) => {
     );
 };
 
-export default FilterItem;
+export default observer(FilterItem);

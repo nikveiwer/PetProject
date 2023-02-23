@@ -37,13 +37,13 @@ export const PetsFetching = () => {
         category: string = 'animals',
         action: string = '',
         accsessToken: string,
-        ...paramsAndValues: string[][]
+        ...paramsAndValues: (string | boolean)[][]
     ): Promise<unknown> => {
         let paramsPath: string = '';
 
-        if (paramsAndValues[0].length === 1) {
+        if (paramsAndValues && paramsAndValues[0].length === 1) {
             paramsPath = '/' + paramsAndValues[0][0];
-        } else {
+        } else if (paramsAndValues) {
             paramsPath =
                 '?' +
                 paramsAndValues
@@ -52,6 +52,8 @@ export const PetsFetching = () => {
                     })
                     .join('&');
         }
+
+        console.log(`https://api.petfinder.com/v2/${action || category}${paramsPath}`)
 
         const data = await requestWithErrHandle(
             `https://api.petfinder.com/v2/${action || category}${paramsPath}`,
@@ -129,14 +131,15 @@ export const PetsFetching = () => {
 
     const _transformToFilters = (reqFil: any, reqBreeds: any): IFilters => {
         return {
+            // sort: ["random", "recent", "-recent"],
             breed: reqBreeds.breeds.map((item: any) => {
                 return item.name
             }),
             age: ['baby', 'young', 'adult', 'senior'],
             size: ['small', 'medium', 'large', 'xlarge'],
             gender: reqFil.genders,
-            'good with': ['children', 'cats', 'dogs'],
-            'coat length': reqFil.coats,
+            'good_with': ['children', 'cats', 'dogs'],
+            coat: reqFil.coats,
             color: reqFil.colors,
         };
     };
