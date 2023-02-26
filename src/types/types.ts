@@ -46,24 +46,25 @@ export interface IPetCard {
 
 export interface IFilters {
     // sort: ["random", "recent", "-recent"];
-    breed: string[]
+    breed: string[];
     age: ['baby', 'young', 'adult', 'senior'];
     size: ['small', 'medium', 'large', 'xlarge'];
     gender: string[];
-    'good_with': ['children', 'cats', 'dogs'];
+    good_with: ['children', 'cats', 'dogs'];
     coat: string[];
     color: string[];
 }
 
 export interface ICurrentFilters {
-    sort: "random" | "recent" | "-recent";
+    sort: 'random' | 'recent' | '-recent';
     breed: string;
-    age: "" | 'baby' | 'young' | 'adult' | 'senior';
-    size: "" | 'small' | 'medium' | 'large' | 'xlarge';
+    age: '' | 'baby' | 'young' | 'adult' | 'senior';
+    size: '' | 'small' | 'medium' | 'large' | 'xlarge';
     gender: string;
-    'good_with': "" | 'children' | 'cats' | 'dogs';
+    good_with: '' | 'children' | 'cats' | 'dogs';
     coat: string;
     color: string;
+    name: string;
 }
 
 export function isAuthData(data: unknown): data is IAuthAPI {
@@ -97,7 +98,6 @@ export function isRequestFilters(data: unknown): data is IRequestFilters {
 
     return false;
 }
-
 
 export function isRequestBreeds(data: unknown): data is IRequestBreeds {
     if (data && typeof data === 'object') {
