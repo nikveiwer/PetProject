@@ -6,7 +6,7 @@ export interface IAuthAPI {
 
 export interface IAnimals {
     animals: any[];
-    pagination: object;
+    pagination: any;
 }
 
 export interface IAnimal {
@@ -65,6 +65,11 @@ export interface ICurrentFilters {
     coat: string;
     color: string;
     name: string;
+}
+
+export interface IPagination {
+    currentPage: number;
+    totalPages: number
 }
 
 export function isAuthData(data: unknown): data is IAuthAPI {
