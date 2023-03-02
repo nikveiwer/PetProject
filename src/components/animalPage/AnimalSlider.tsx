@@ -53,7 +53,7 @@ const AnimalSlider: React.FC<Props> = ({ photos }) => {
 
     return (
         photos && (
-            <div className=" bg-red-300 w-full h-[628px] rounded-b-2xl m-auto mb-5 py-8 px-4 relative group">
+            <div className=" bg-red-300 w-full h-[800px] rounded-b-2xl m-auto mb-5 py-8 px-4 relative group">
                 <div
                     style={{ backgroundImage: `url(${photos[currentIndex].url})` }}
                     className=" m-auto max-w-5xl h-full rounded-2xl bg-center bg-cover duration-500"></div>

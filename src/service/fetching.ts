@@ -53,7 +53,7 @@ export const PetsFetching = () => {
                     .join('&');
         }
 
-        console.log(`https://api.petfinder.com/v2/${action || category}${paramsPath}`)
+        console.log(`https://api.petfinder.com/v2/${action || category}${paramsPath}`);
 
         const data = await requestWithErrHandle(
             `https://api.petfinder.com/v2/${action || category}${paramsPath}`,
@@ -99,7 +99,7 @@ export const PetsFetching = () => {
     const _tranformToPetCard = (animal: any): IPetCard => {
         return {
             id: animal.id,
-            name: animal.name.length > 9 ? animal.breeds?.primary : animal.name,
+            name: animal.name.length > 9 ? animal.name.slice(0, 9) + '...' : animal.name,
             imagePath: animal.primary_photo_cropped?.full ? animal.primary_photo_cropped.full : '',
         };
     };
@@ -133,14 +133,14 @@ export const PetsFetching = () => {
         return {
             // sort: ["random", "recent", "-recent"],
             breed: reqBreeds.breeds.map((item: any) => {
-                return item.name
+                return item.name;
             }),
             age: ['baby', 'young', 'adult', 'senior'],
             size: ['small', 'medium', 'large', 'xlarge'],
             gender: reqFil.genders,
-            'good_with': ['children', 'cats', 'dogs'],
+            good_with: ['children', 'cats', 'dogs'],
             coat: reqFil.coats,
-            color: reqFil.colors,
+            color: reqFil.colors.filter((item: any) => !item.includes('&')),
         };
     };
 
