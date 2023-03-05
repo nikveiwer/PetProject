@@ -30,7 +30,7 @@ export const PetCard = ({ imagePath, name, id }: Props) => {
                         alt={'animalImage'}></img>
                 </div>
 
-                <div className=" flex justify-center pt-6">
+                <div className=" flex justify-center py-6">
                     <div className=" text-red-300 text-2xl text-center">{name}</div>
                 </div>
             </Link>

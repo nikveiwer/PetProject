@@ -31,6 +31,7 @@ export interface IPetInformation {
     breed: string;
     location: string;
     characteristics: string;
+    specificity: string;
     'house trained': string;
     helth: string;
     'good in a home with': string;
@@ -69,7 +70,7 @@ export interface ICurrentFilters {
 
 export interface IPagination {
     currentPage: number;
-    totalPages: number
+    totalPages: number;
 }
 
 export function isAuthData(data: unknown): data is IAuthAPI {

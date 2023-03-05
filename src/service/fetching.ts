@@ -118,6 +118,7 @@ export const PetsFetching = () => {
             breed: animal.breeds.primary,
             location: `${animal.contact.address.city}, ${animal.contact.address.state}`,
             characteristics: `${animal.age}, ${animal.gender}, ${animal.size}, ${animal.colors.primary}`,
+            specificity: animal.tags.join(', '),
             'house trained': animal.attributes.house_trained ? 'Yes' : 'No',
             helth: 'Vacination up to date',
             'good in a home with': `Other ${Object.entries(animal.environment)
