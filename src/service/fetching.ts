@@ -118,7 +118,7 @@ export const PetsFetching = () => {
             breed: animal.breeds.primary,
             location: `${animal.contact.address.city}, ${animal.contact.address.state}`,
             characteristics: `${animal.age}, ${animal.gender}, ${animal.size}, ${animal.colors.primary}`,
-            specificity: animal.tags.join(', '),
+            specificity: animal.tags.length !== 0 ? animal.tags.join(', ') : "There is no information yet",
             'house trained': animal.attributes.house_trained ? 'Yes' : 'No',
             helth: 'Vacination up to date',
             'good in a home with': `Other ${Object.entries(animal.environment)
@@ -130,9 +130,10 @@ export const PetsFetching = () => {
         };
     };
 
-    const _transformToFilters = (reqFil: any, reqBreeds: any): IFilters => {
+    const _transformToFilters = (reqFil: any, reqBreeds: any,): IFilters => {
         return {
             // sort: ["random", "recent", "-recent"],
+
             breed: reqBreeds.breeds.map((item: any) => {
                 return item.name;
             }),

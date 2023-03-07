@@ -1,7 +1,11 @@
-export default async function SavedSearches() {
+import SSNavigation from "../../../src/components/savedSearchesPage/SSNavigation";
+import SavedSearches from "../../../src/components/savedSearchesPage/SavedSearches";
+
+export default async function SavedSearchesPage() {
     return (
         <>
-            <div>Hello</div>
+            <SSNavigation />
+            <SavedSearches />
         </>
     );
 }

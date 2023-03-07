@@ -6,6 +6,7 @@ import { MainFooter } from "../src/components/firstLayout/MainFooter";
 
 import AuthStoreProvider from "../src/store/authStore/authStoreProvider";
 import FiltersStoreProvider from "../src/store/filtersStore/filtersStoreProvider";
+import SavedSearchesStoreProvider from "../src/store/savedSearchesStore/savedSearchesProvider";
 
 // If loading a variable font, you don't need to specify the font weight
 const inter = Inter({
@@ -23,12 +24,14 @@ export default function RootLayout({
         <html lang="en" className={inter.className}>
             <head />
             <body>
-                <AuthStoreProvider>
-                    <FiltersStoreProvider>
-                        <MainHeader></MainHeader>
-                        {children}
-                    </FiltersStoreProvider>
-                </AuthStoreProvider>
+                <SavedSearchesStoreProvider>
+                    <AuthStoreProvider>
+                        <FiltersStoreProvider>
+                            <MainHeader></MainHeader>
+                            {children}
+                        </FiltersStoreProvider>
+                    </AuthStoreProvider>
+                </SavedSearchesStoreProvider>
                 <MainFooter></MainFooter>
             </body>
         </html>

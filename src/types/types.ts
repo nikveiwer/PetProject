@@ -57,6 +57,7 @@ export interface IFilters {
 }
 
 export interface ICurrentFilters {
+    type: "cats" | "dogs" | "";
     sort: 'random' | 'recent' | '-recent';
     breed: string;
     age: '' | 'baby' | 'young' | 'adult' | 'senior';
