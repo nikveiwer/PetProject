@@ -20,18 +20,6 @@ export default async function Home() {
                     We have huge amount of informaton about pets!
                 </h2>
                 <div className=" absolute left-[50%] top-96 translate-x-[-50%] flex justify-center gap-3 ">
-                    <Link href={'/availablePets/cats'}>
-                        <div className=" flex flex-col items-center justify-between sm:pt-2 pb-10 sm:w-52 sm:h-52 w-36 h-36 rounded-2xl  hover:border-red-300  hover:border-[3px] bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition-all">
-                            <div>
-                                <Image
-                                    width={100}
-                                    height={100}
-                                    src={catIcon}
-                                    alt="mainLogo"></Image>
-                            </div>
-                            <div className="text-xl">Cats</div>
-                        </div>
-                    </Link>
                     <Link href={'availablePets/dogs'}>
                         <div className=" flex flex-col items-center justify-between sm:pt-2 pb-10 sm:w-52 sm:h-52 w-36 h-36 rounded-2xl  hover:border-red-300  hover:border-[3px] bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition-all">
                             <div>
@@ -42,6 +30,18 @@ export default async function Home() {
                                     alt="mainLogo"></Image>
                             </div>
                             <div className="text-xl">Dogs</div>
+                        </div>
+                    </Link>
+                    <Link href={'/availablePets/cats'}>
+                        <div className=" flex flex-col items-center justify-between sm:pt-2 pb-10 sm:w-52 sm:h-52 w-36 h-36 rounded-2xl  hover:border-red-300  hover:border-[3px] bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition-all">
+                            <div>
+                                <Image
+                                    width={100}
+                                    height={100}
+                                    src={catIcon}
+                                    alt="mainLogo"></Image>
+                            </div>
+                            <div className="text-xl">Cats</div>
                         </div>
                     </Link>
                 </div>
