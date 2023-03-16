@@ -48,7 +48,7 @@ const ProfilePart: React.FC = () => {
     if (status === "idle") {
         return (
             <div className=" flex items-center relative">
-                <div className="mr-5 cursor-pointer  hover:border-red-300  hover:border-[1px] rounded-lg transition-all">
+                <div className="mr-5 cursor-pointer  hover:border-red-300 border-[1px] border-white rounded-lg transition-all">
                     <Image
                         width={48}
                         height={48}
@@ -59,7 +59,7 @@ const ProfilePart: React.FC = () => {
                 <span className="h-[45px] border-red-300  border-[1px]"></span>
                 <button
                     type="button"
-                    className={`peer flex items-center hover:border-red-300  hover:border-[1px]  cursor-pointer transition-all ml-5 px-2 rounded-lg hover:shadow-sm hover:bg-white`}
+                    className={`peer flex items-center hover:border-red-300 border-[1px] border-white  cursor-pointer transition-all ml-5 px-2 rounded-lg hover:shadow-sm hover:bg-white`}
                 >
                     <div>
                         <Image

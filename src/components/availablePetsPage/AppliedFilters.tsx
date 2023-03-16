@@ -8,6 +8,8 @@ import { useSavedSearchesStore } from "../../store/savedSearchesStore/savedSearc
 
 import { ICurrentFilters } from "../../types/types";
 
+import uuid4 from "uuid4";
+
 const AppliedFilters: React.FC = () => {
     const { filters, deleteRequiredFilter, deleteAllFilters } =
         useFiltersStore();
@@ -79,7 +81,7 @@ const AppliedFilters: React.FC = () => {
                     className={`${
                         isAnyAppliedFilters || "hidden"
                     } min-h-[25px] rounded-4xl bg-red-300 px-2 text-center text-white`}
-                    onClick={() => addSearch(filters)}
+                    onClick={() => addSearch({ id: uuid4(), ...filters })}
                 >
                     Save this search
                 </button>
