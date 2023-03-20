@@ -6,6 +6,8 @@ import RecentPets from '../src/components/mainPage/RecentPets';
 import catIcon from '../public/assets/icons/cat.svg';
 import dogIcon from '../public/assets/icons/dog.svg';
 
+import supabase from '../src/config/supabaseClient';
+
 import CustomErrorBoundary from '../src/components/errorBoundary/customErrorBoundary';
 
 export default async function Home() {

@@ -1,14 +1,22 @@
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable } from 'mobx';
 
-import { createContext, useContext } from "react";
+import { createContext, useContext } from 'react';
 
-import { ICurrentFilters } from "../../types/types";
-type VisibleSearches = "all" | "cats" | "dogs";
+import { ICurrentFilters } from '../../types/types';
+type VisibleSearches = 'all' | 'cats' | 'dogs';
 
-import _ from "lodash";
+import _ from 'lodash';
 
-interface ISavedSearches extends ICurrentFilters {
+export interface ISavedSearches extends ICurrentFilters {
     id: string;
+}
+
+export function isSavedSearches(T: unknown): T is ISavedSearches {
+    if (T && typeof T === 'object' && 'id' in T && 'type' in T) {
+        return true;
+    }
+
+    return false;
 }
 
 export default class SavedSearchesStore {
@@ -18,29 +26,37 @@ export default class SavedSearchesStore {
 
     savedSearches: ISavedSearches[] = [
         {
-            id: "1",
-            type: "cats",
-            sort: "random",
-            breed: "Domestic Short Hair",
-            age: "young",
-            size: "small",
-            gender: "male",
-            good_with: "",
-            coat: "",
-            color: "",
-            name: "",
+            id: '1',
+            type: 'cats',
+            sort: 'random',
+            breed: 'Domestic Short Hair',
+            age: 'young',
+            size: 'small',
+            gender: 'male',
+            good_with: '',
+            coat: '',
+            color: '',
+            name: '',
         },
     ];
 
-    visibleSearches: VisibleSearches = "all";
+    visibleSearches: VisibleSearches = 'all';
 
     lounching: string[] = [];
+
+    deletedSearch: ISavedSearches['id'] | null = null;
+    changedSearch: ISavedSearches | null = null;
+    addedSearch: ISavedSearches | null = null;
+
+    setSavedSearches = (response: ISavedSearches[]) => {
+        this.savedSearches = response;
+    };
 
     addSearch = (addedSearch: ISavedSearches) => {
         const { id, ...rest } = addedSearch;
 
         let isSearchAlredyThere = this.savedSearches.some(({ id, ...item }) =>
-            _.isEqual(item, rest)
+            _.isEqual(item, rest),
         );
 
         console.log(isSearchAlredyThere);
@@ -52,17 +68,15 @@ export default class SavedSearchesStore {
         }
     };
 
-    deleteSearch = (deletedId: ISavedSearches["id"]) => {
-        this.savedSearches = this.savedSearches.filter(
-            (item) => item.id !== deletedId
-        );
+    deleteSearch = (deletedId: ISavedSearches['id']) => {
+        this.savedSearches = this.savedSearches.filter((item) => item.id !== deletedId);
     };
 
     setVisibleSearches = (param: VisibleSearches) => {
         this.visibleSearches = param;
     };
 
-    changeSearch = (id: ISavedSearches["id"], newSearch: ICurrentFilters) => {
+    changeSearch = (id: ISavedSearches['id'], newSearch: ICurrentFilters) => {
         this.savedSearches = this.savedSearches.map((item) => {
             if (item.id === id) {
                 return {
@@ -79,17 +93,16 @@ export default class SavedSearchesStore {
     }
 
     get catsCount() {
-        return this.savedSearches.filter((item) => item.type === "cats").length;
+        return this.savedSearches.filter((item) => item.type === 'cats').length;
     }
 
     get dogsCount() {
-        return this.savedSearches.filter((item) => item.type === "dogs").length;
+        return this.savedSearches.filter((item) => item.type === 'dogs').length;
     }
 }
 
 export const SavedSearchesStoreContext = createContext<SavedSearchesStore>(
-    null as unknown as SavedSearchesStore
+    null as unknown as SavedSearchesStore,
 );
 
-export const useSavedSearchesStore = () =>
-    useContext(SavedSearchesStoreContext);
+export const useSavedSearchesStore = () => useContext(SavedSearchesStoreContext);
