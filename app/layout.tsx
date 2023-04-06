@@ -8,6 +8,8 @@ import AuthStoreProvider from "../src/store/authStore/authStoreProvider";
 import FiltersStoreProvider from "../src/store/filtersStore/filtersStoreProvider";
 import SavedSearchesStoreProvider from "../src/store/savedSearchesStore/savedSearchesProvider";
 
+import SupabaseProvider from "../src/config/supabaseClient";
+
 // If loading a variable font, you don't need to specify the font weight
 const inter = Inter({
     subsets: ["latin"],
@@ -24,14 +26,16 @@ export default function RootLayout({
         <html lang="en" className={inter.className}>
             <head />
             <body>
-                <SavedSearchesStoreProvider>
-                    <AuthStoreProvider>
-                        <FiltersStoreProvider>
-                            <MainHeader></MainHeader>
-                            {children}
-                        </FiltersStoreProvider>
-                    </AuthStoreProvider>
-                </SavedSearchesStoreProvider>
+                <SupabaseProvider>
+                    <SavedSearchesStoreProvider>
+                        <AuthStoreProvider>
+                            <FiltersStoreProvider>
+                                <MainHeader></MainHeader>
+                                {children}
+                            </FiltersStoreProvider>
+                        </AuthStoreProvider>
+                    </SavedSearchesStoreProvider>
+                </SupabaseProvider>
                 <MainFooter></MainFooter>
             </body>
         </html>

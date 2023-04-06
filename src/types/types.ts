@@ -43,6 +43,9 @@ export interface IPetCard {
     id: number;
     name: string;
     imagePath: string;
+    likedInfo: string;
+    breed: string
+    petLink: string;
 }
 
 export interface IFilters {

@@ -32,9 +32,7 @@ const SingleSearch: React.FC<Props> = ({ id, item }) => {
     const launchResolver = (item: ICurrentFilters) => {
         onSearchLaunch(item);
 
-        setTimeout(() => {
-            router.push(`availablePets/${item.type}`);
-        });
+        router.push(`availablePets/${item.type}`);
     };
 
     const onCrossClick = () => {

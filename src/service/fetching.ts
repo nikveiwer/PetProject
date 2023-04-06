@@ -101,6 +101,9 @@ export const PetsFetching = () => {
             id: animal.id,
             name: animal.name.length > 9 ? animal.name.slice(0, 9) + '...' : animal.name,
             imagePath: animal.primary_photo_cropped?.full ? animal.primary_photo_cropped.full : '',
+            likedInfo: `${animal.age}, ${animal.gender}`, 
+            breed: animal.breeds.primary,
+            petLink: animal.url
         };
     };
 

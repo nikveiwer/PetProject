@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 
-type StatusType = 'idle' | 'loading' | 'error';
+ export type StatusType = 'idle' | 'loading' | 'error';
 
 export const useHttp = () => {
     const [status, setStatus] = useState<StatusType>('loading');

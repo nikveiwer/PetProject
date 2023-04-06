@@ -1,8 +1,9 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable } from "mobx";
 
-import { createContext, useContext } from 'react';
+import { createContext, useContext } from "react";
 
-import { ICurrentFilters, IPagination } from '../../types/types';
+import { ICurrentFilters, IPagination } from "../../types/types";
+import { ValueOf } from "next/dist/shared/lib/constants";
 
 export default class FiltersStore {
     constructor() {
@@ -10,16 +11,16 @@ export default class FiltersStore {
     }
 
     filters: ICurrentFilters = {
-        type: '',
-        sort: 'random',
-        breed: '',
-        age: '',
-        size: '',
-        gender: '',
-        good_with: '',
-        coat: '',
-        color: '',
-        name: '',
+        type: "",
+        sort: "recent",
+        breed: "",
+        age: "",
+        size: "",
+        gender: "",
+        good_with: "",
+        coat: "",
+        color: "",
+        name: "",
     };
 
     switcher: boolean = false;
@@ -28,11 +29,14 @@ export default class FiltersStore {
         this.switcher = !this.switcher;
     };
 
-    setRequiredFilter = (requiredFilter: keyof ICurrentFilters, value: string) => {
-        value === 'any'
+    setRequiredFilter = (
+        requiredFilter: keyof ICurrentFilters,
+        value: ValueOf<ICurrentFilters>
+    ) => {
+        value === "any"
             ? (this.filters = {
                   ...this.filters,
-                  [requiredFilter]: '',
+                  [requiredFilter]: "",
               })
             : (this.filters = {
                   ...this.filters,
@@ -42,7 +46,7 @@ export default class FiltersStore {
         this.setCurrentPage(1);
     };
 
-    setPetType = (currentPet: 'cats' | 'dogs' | '') => {
+    setPetType = (currentPet: "cats" | "dogs" | "") => {
         this.filters = {
             ...this.filters,
             type: currentPet,
@@ -52,7 +56,7 @@ export default class FiltersStore {
     deleteRequiredFilter = (requiredFilter: keyof ICurrentFilters) => {
         this.filters = {
             ...this.filters,
-            [requiredFilter]: '',
+            [requiredFilter]: "",
         };
     };
 
@@ -60,14 +64,14 @@ export default class FiltersStore {
         this.filters = {
             type: this.filters.type,
             sort: this.filters.sort,
-            breed: '',
-            age: '',
-            size: '',
-            gender: '',
-            good_with: '',
-            coat: '',
-            color: '',
-            name: '',
+            breed: "",
+            age: "",
+            size: "",
+            gender: "",
+            good_with: "",
+            coat: "",
+            color: "",
+            name: "",
         };
     };
 
@@ -93,6 +97,8 @@ export default class FiltersStore {
     };
 }
 
-export const FiltersStoreContext = createContext<FiltersStore>(null as unknown as FiltersStore);
+export const FiltersStoreContext = createContext<FiltersStore>(
+    null as unknown as FiltersStore
+);
 
 export const useFiltersStore = () => useContext(FiltersStoreContext);

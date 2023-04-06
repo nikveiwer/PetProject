@@ -11,6 +11,12 @@ type Props = {
     };
 };
 
+const sortFiltersOptions = [
+    ["recent", "Newest addition"],
+    ["-recent", "Oldest addition"],
+    ["random", "Randomize"],
+];
+
 export default async function AvailablePets({ params: { pet } }: Props) {
     return (
         <>
@@ -24,13 +30,16 @@ export default async function AvailablePets({ params: { pet } }: Props) {
                     <Filters pet={pet} />
                     <main className="w-[1500px]">
                         <div className=" flex justify-between lg:flex-row flex-col">
-                            <AppliedFilters />
+                            <AppliedFilters pet={pet} />
                             <div
                                 className="flex justify-between order-first mb-5 lg:order-last lg:mb-0
                             "
                             >
                                 <FiltersOpenButton />
-                                <SortBy />
+                                <SortBy
+                                    target={"filters"}
+                                    options={sortFiltersOptions}
+                                />
                             </div>
                         </div>
                         <AvailableCards searchedType={pet}></AvailableCards>
