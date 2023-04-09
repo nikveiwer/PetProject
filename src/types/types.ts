@@ -44,8 +44,9 @@ export interface IPetCard {
     name: string;
     imagePath: string;
     likedInfo: string;
-    breed: string
+    breed: string;
     petLink: string;
+    publishedAt: Date;
 }
 
 export interface IFilters {
@@ -60,7 +61,7 @@ export interface IFilters {
 }
 
 export interface ICurrentFilters {
-    type: "cats" | "dogs" | "";
+    type: 'cats' | 'dogs' | '';
     sort: 'random' | 'recent' | '-recent';
     breed: string;
     age: '' | 'baby' | 'young' | 'adult' | 'senior';

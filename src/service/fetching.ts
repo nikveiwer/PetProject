@@ -101,9 +101,10 @@ export const PetsFetching = () => {
             id: animal.id,
             name: animal.name.length > 9 ? animal.name.slice(0, 9) + '...' : animal.name,
             imagePath: animal.primary_photo_cropped?.full ? animal.primary_photo_cropped.full : '',
-            likedInfo: `${animal.age}, ${animal.gender}`, 
+            likedInfo: `${animal.age}, ${animal.gender}`,
             breed: animal.breeds.primary,
-            petLink: animal.url
+            petLink: animal.url,
+            publishedAt: new Date(animal.published_at),
         };
     };
 
@@ -121,7 +122,8 @@ export const PetsFetching = () => {
             breed: animal.breeds.primary,
             location: `${animal.contact.address.city}, ${animal.contact.address.state}`,
             characteristics: `${animal.age}, ${animal.gender}, ${animal.size}, ${animal.colors.primary}`,
-            specificity: animal.tags.length !== 0 ? animal.tags.join(', ') : "There is no information yet",
+            specificity:
+                animal.tags.length !== 0 ? animal.tags.join(', ') : 'There is no information yet',
             'house trained': animal.attributes.house_trained ? 'Yes' : 'No',
             helth: 'Vacination up to date',
             'good in a home with': `Other ${Object.entries(animal.environment)
@@ -133,7 +135,7 @@ export const PetsFetching = () => {
         };
     };
 
-    const _transformToFilters = (reqFil: any, reqBreeds: any,): IFilters => {
+    const _transformToFilters = (reqFil: any, reqBreeds: any): IFilters => {
         return {
             // sort: ["random", "recent", "-recent"],
 
