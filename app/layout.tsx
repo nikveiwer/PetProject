@@ -7,6 +7,7 @@ import { MainFooter } from "../src/components/firstLayout/MainFooter";
 import AuthStoreProvider from "../src/store/authStore/authStoreProvider";
 import FiltersStoreProvider from "../src/store/filtersStore/filtersStoreProvider";
 import SavedSearchesStoreProvider from "../src/store/savedSearchesStore/savedSearchesProvider";
+import LikedStoreProvider from "../src/store/likedStore/likedStoreProvider";
 
 import SupabaseProvider from "../src/config/supabaseClient";
 
@@ -27,14 +28,16 @@ export default function RootLayout({
             <head />
             <body>
                 <SupabaseProvider>
-                    <SavedSearchesStoreProvider>
-                        <AuthStoreProvider>
-                            <FiltersStoreProvider>
-                                <MainHeader></MainHeader>
-                                {children}
-                            </FiltersStoreProvider>
-                        </AuthStoreProvider>
-                    </SavedSearchesStoreProvider>
+                    <LikedStoreProvider>
+                        <SavedSearchesStoreProvider>
+                            <AuthStoreProvider>
+                                <FiltersStoreProvider>
+                                    <MainHeader></MainHeader>
+                                    {children}
+                                </FiltersStoreProvider>
+                            </AuthStoreProvider>
+                        </SavedSearchesStoreProvider>
+                    </LikedStoreProvider>
                 </SupabaseProvider>
                 <MainFooter></MainFooter>
             </body>

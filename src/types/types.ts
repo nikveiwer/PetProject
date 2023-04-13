@@ -46,7 +46,7 @@ export interface IPetCard {
     likedInfo: string;
     breed: string;
     petLink: string;
-    publishedAt: Date;
+    publishedAt: string;
 }
 
 export interface IFilters {

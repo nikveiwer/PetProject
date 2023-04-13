@@ -1,10 +1,12 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable } from "mobx";
 
-import { createContext, useContext } from 'react';
+import { createContext, useContext } from "react";
 
-import { IPetCard } from '../../types/types';
+import { IPetCard } from "../../types/types";
 
-interface ILikedAnimal extends IPetCard {}
+interface ILikedAnimal extends IPetCard {
+    likedAt: string;
+}
 
 export default class LikedStore {
     constructor() {
@@ -12,8 +14,14 @@ export default class LikedStore {
     }
 
     likedAnimals: ILikedAnimal[] = [];
+
+    isSaved = (cardId: ILikedAnimal["id"]) => {
+        return this.likedAnimals.some((item) => item.id === cardId);
+    };
 }
 
-export const LikedStoreContext = createContext<LikedStore>(null as unknown as LikedStore);
+export const LikedStoreContext = createContext<LikedStore>(
+    null as unknown as LikedStore
+);
 
 export const useLikedStore = () => useContext(LikedStoreContext);

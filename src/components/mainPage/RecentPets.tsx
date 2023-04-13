@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 import { PetsFetching } from "../../service/fetching";
 
-import { PetCard } from "./PetCard";
+import PetCard from "./PetCard";
 import { SkeletonCard } from "./SkeletonCard";
 
 import { isAnimals } from "../../types/types";
@@ -64,13 +64,13 @@ const RecentPets: React.FC = () => {
         case "idle":
             return (
                 <div className=" py-9 px-3 flex justify-center gap-4 lg:flex-nowrap flex-wrap">
-                    {pets.map(({ id, name, imagePath }) => {
+                    {pets.map(({ id, ...rest }) => {
                         return (
                             <PetCard
                                 key={id}
                                 id={id}
-                                imagePath={imagePath}
-                                name={name}
+                                {...rest}
+                                expanded={false}
                             ></PetCard>
                         );
                     })}

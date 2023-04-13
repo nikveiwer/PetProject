@@ -104,7 +104,7 @@ export const PetsFetching = () => {
             likedInfo: `${animal.age}, ${animal.gender}`,
             breed: animal.breeds.primary,
             petLink: animal.url,
-            publishedAt: new Date(animal.published_at),
+            publishedAt:(new Date(animal.published_at)).toISOString(),
         };
     };
 

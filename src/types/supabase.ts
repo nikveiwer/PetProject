@@ -5,6 +5,38 @@ export type Json = string | number | boolean | null | { [key: string]: Json } | 
 export interface Database {
     public: {
         Tables: {
+            likedAnimals: {
+                Row: {
+                  breed: string
+                  id: number
+                  imagePath: string 
+                  likedAt: string
+                  likedInfo: string
+                  name: string 
+                  petLink: string
+                  publishedAt: string
+                }
+                Insert: {
+                  breed?: string | null
+                  id: number
+                  imagePath?: string | null
+                  likedAt: string
+                  likedInfo?: string | null
+                  name?: string | null
+                  petLink?: string | null
+                  publishedAt: string
+                }
+                Update: {
+                  breed?: string | null
+                  id?: number
+                  imagePath?: string | null
+                  likedAt?: string
+                  likedInfo?: string | null
+                  name?: string | null
+                  petLink?: string | null
+                  publishedAt?: string
+                }
+              },
             savedSearches: {
                 // Row: ISavedSearches;
                 Row: {
