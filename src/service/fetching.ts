@@ -104,7 +104,7 @@ export const PetsFetching = () => {
             likedInfo: `${animal.age}, ${animal.gender}`,
             breed: animal.breeds.primary,
             petLink: animal.url,
-            publishedAt:(new Date(animal.published_at)).toISOString(),
+            publishedAt: new Date(animal.published_at).toISOString(),
         };
     };
 
@@ -121,7 +121,9 @@ export const PetsFetching = () => {
                     : null,
             breed: animal.breeds.primary,
             location: `${animal.contact.address.city}, ${animal.contact.address.state}`,
-            characteristics: `${animal.age}, ${animal.gender}, ${animal.size}, ${animal.colors.primary}`,
+            characteristics: `${animal.age}, ${animal.gender}, ${animal.size}, ${
+                animal.colors.primary ?? 'No color description'
+            }`,
             specificity:
                 animal.tags.length !== 0 ? animal.tags.join(', ') : 'There is no information yet',
             'house trained': animal.attributes.house_trained ? 'Yes' : 'No',
