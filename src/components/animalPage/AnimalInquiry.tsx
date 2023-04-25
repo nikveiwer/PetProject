@@ -1,54 +1,67 @@
-'use client';
+"use client";
 
-import { Icon } from '@iconify/react';
-import { useEffect, useState } from 'react';
-import { useSupabase } from '../../config/supabaseClient';
-import { useLikedStore, ILikedAnimal } from '../../store/likedStore/likedStore';
+import { Icon } from "@iconify/react";
+import { useEffect, useState } from "react";
+import { useSupabase } from "../../config/supabaseClient";
+import { useLikedStore, ILikedAnimal } from "../../store/likedStore/likedStore";
 
-import { IPetCard } from '../../types/types';
+import { IPetCard } from "../../types/types";
+import { IPetInformation } from "../../types/types";
 
-type StatusType = 'idle' | 'error' | 'loading' | 'saved';
+interface Props extends IPetCard {}
 
-const AnimalInquiry: React.FC<IPetCard> = (props) => {
+type StatusType = "idle" | "error" | "loading" | "saved";
+
+const AnimalInquiry: React.FC<Props> = (props) => {
     const { name, petLink, id } = props;
 
     const { supabase } = useSupabase();
 
-    const [likedStatus, setLikedStatus] = useState<StatusType>('idle');
+    const [likedStatus, setLikedStatus] = useState<StatusType>("idle");
     const [added, setAdded] = useState<boolean>(false);
 
-    const { addLiked, isSaved } = useLikedStore();
+    const { likedAnimals, addLiked, deleteLiked, isSaved } = useLikedStore();
+
+    console.log(`Animal page status: ${likedStatus}`);
+    console.log(`Added: ${added}`);
 
     const sendLikedAnimalInformation = async (likedData: ILikedAnimal) => {
-        setLikedStatus('loading');
+        setLikedStatus("loading");
 
-        let { data, error } = await supabase.from('likedAnimals').insert([likedData]);
+        let { data, error } = await supabase
+            .from("likedAnimals")
+            .insert([likedData]);
 
         if (!error) {
-            setLikedStatus('saved');
+            setLikedStatus("saved");
         } else {
-            setLikedStatus('error');
+            setLikedStatus("error");
         }
     };
 
     const deleteLikedAnimalInformation = async () => {
-        setLikedStatus('loading');
+        setLikedStatus("loading");
 
-        const { data, error } = await supabase.from('likedAnimals').delete().eq('id', id);
+        const { data, error } = await supabase
+            .from("likedAnimals")
+            .delete()
+            .eq("id", id);
 
         if (!error) {
-            setLikedStatus('idle');
+            setLikedStatus("idle");
         } else {
-            setLikedStatus('error');
+            setLikedStatus("error");
         }
     };
 
     useEffect(() => {
-        if (isSaved(id)) setLikedStatus('saved');
+        if (isSaved(id)) {
+            setLikedStatus("saved");
+        }
     }, []);
 
     useEffect(() => {
-        if (status === 'idle' && added) {
+        if (likedStatus === "idle" && added) {
             const likedData = { ...props, likedAt: new Date().toISOString() };
 
             addLiked(likedData);
@@ -56,7 +69,9 @@ const AnimalInquiry: React.FC<IPetCard> = (props) => {
             sendLikedAnimalInformation(likedData);
         }
 
-        if (status === 'saved') {
+        if (likedStatus === "saved") {
+            deleteLiked(id);
+
             deleteLikedAnimalInformation();
         }
     }, [added]);
@@ -66,31 +81,60 @@ const AnimalInquiry: React.FC<IPetCard> = (props) => {
             <h5 className="mb-4 text-xl font-bold tracking-tight text-center text-gray-900 dark:text-white">
                 Considering {name} for adoption?
             </h5>
+            {/* 
+            <button
+                className={` w-full px-3 py-2 mb-3 text-sm font-medium text-center text-white uppercase bg-red-300 rounded-lg ${
+                    status === "adoptable" && "hover:bg-red-400 "
+                } transition-all focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800`}
+            >
+                {status === "adoptable" ? (
+                    <a href={petLink}>Start your inquiry</a>
+                ) : (
+                    <span>This pet is alredy adopted</span>
+                )}
+            </button> */}
 
-            <button className=" w-full px-3 py-2 mb-3 text-sm font-medium text-center text-white uppercase bg-red-300 rounded-lg hover:bg-red-400 transition-all focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                <a href={petLink}>Start your inquiry</a>
-            </button>
-
-            {likedStatus === 'idle' && (
+            {likedStatus === "idle" && (
                 <button
                     onClick={() => setAdded((add) => !add)}
-                    className=" w-full px-3 py-2 flex justify-center items-center gap-2 text-sm font-medium text-center text-white uppercase bg-red-300 rounded-lg hover:bg-red-400 transition-all focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    className=" w-full px-3 py-2 flex justify-center items-center gap-2 text-sm font-medium text-center text-white uppercase bg-red-300 rounded-lg hover:bg-red-400 transition-all focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                >
                     <div>add to favorites</div>
                     {/* <AiOutlineHeart></AiOutlineHeart> */}
-                    <Icon icon="mdi:cards-heart-outline" color="white" width={19} height={19} />
+                    <Icon
+                        icon="mdi:cards-heart-outline"
+                        color="white"
+                        width={19}
+                        height={19}
+                    />
                 </button>
             )}
 
-            {likedStatus === 'loading' && (
+            {likedStatus === "loading" && (
                 <button className=" w-full px-3 py-2 h-8 rounded-lg animate-pulse bg-gray-400"></button>
             )}
 
-            {likedStatus === 'saved' && (
+            {likedStatus === "saved" && (
                 <button
                     onClick={() => setAdded((add) => !add)}
-                    className=" w-full px-3 py-2 flex justify-center items-center gap-2 text-sm font-medium text-center border-red-300 border-[1px] text-gray-900 uppercase bg-white rounded-lg hover:bg-red-300 hover:text-white transition-all focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    className=" w-full px-3 py-2 flex justify-center items-center gap-2 text-sm font-medium text-center border-red-300 border-[1px] text-gray-900 uppercase bg-white rounded-lg hover:bg-red-300 hover:text-white transition-all focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                >
                     <div>exclude of favorites</div>
-                    <Icon icon="mdi:cards-heart" color="#fda4af" width={19} height={19} />
+                    <Icon
+                        icon="mdi:cards-heart"
+                        color="#fda4af"
+                        width={19}
+                        height={19}
+                    />
+                </button>
+            )}
+
+            {likedStatus === "error" && (
+                <button
+                    onClick={() => setAdded((add) => !add)}
+                    className=" w-full px-3 py-2 flex justify-center items-center gap-2 text-sm font-medium text-center border-red-300 border-[1px] text-gray-900 uppercase bg-white rounded-lg cursor-default"
+                >
+                    <div>Something went wrong(. Please update the page</div>
                 </button>
             )}
         </div>

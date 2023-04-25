@@ -37,6 +37,7 @@ export interface IPetInformation {
     'good in a home with': string;
     description: string;
     petLink: string;
+    
 }
 
 export interface IPetCard {

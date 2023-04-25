@@ -134,6 +134,7 @@ export const PetsFetching = () => {
                 .join(', ')}`,
             description: animal.description,
             petLink: animal.url,
+            
         };
     };
 
