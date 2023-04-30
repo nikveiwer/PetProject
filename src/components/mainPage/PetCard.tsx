@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import Link from "next/link";
+import Image from 'next/image';
+import Link from 'next/link';
 
-import { observer } from "mobx-react-lite";
+import { observer } from 'mobx-react-lite';
 
-import heartIcon from "../../../public/assets/icons/heart.svg";
-import cardBackground from "../../../public/assets/backgrounds/cardBackground.jpg";
+import heartIcon from '../../../public/assets/icons/heart.svg';
+import cardBackground from '../../../public/assets/backgrounds/cardBackground.jpg';
 
-import { IPetCard } from "../../types/types";
-import { useEffect, useState } from "react";
+import { IPetCard } from '../../types/types';
+import { useEffect, useState } from 'react';
 
-import { useSupabase } from "../../config/supabaseClient";
-import { ILikedAnimal, useLikedStore } from "../../store/likedStore/likedStore";
+import { useSupabase } from '../../config/supabaseClient';
+import { ILikedAnimal, useLikedStore } from '../../store/likedStore/likedStore';
 
-type StatusType = "idle" | "error" | "loading" | "saved";
+type StatusType = 'idle' | 'error' | 'loading' | 'saved';
 interface Props extends IPetCard {
     expanded: boolean;
 }
@@ -42,49 +42,45 @@ const PetCard = ({
     publishedAt,
     expanded,
 }: Props) => {
-    const [status, setStatus] = useState<StatusType>("idle");
+    const [status, setStatus] = useState<StatusType>('idle');
     const [added, setAdded] = useState<boolean>(false);
 
     const { supabase } = useSupabase();
     const { addLiked, deleteLiked, isSaved } = useLikedStore();
 
     console.log(`Pet card status: ${status}`);
+    console.log(`Pet card added: ${added}`);
 
     const sendLikedAnimalInformation = async (likedData: ILikedAnimal) => {
-        setStatus("loading");
+        setStatus('loading');
 
-        let { data, error } = await supabase
-            .from("likedAnimals")
-            .insert([likedData]);
+        let { data, error } = await supabase.from('likedAnimals').insert([likedData]);
 
         if (!error) {
-            setStatus("saved");
+            setStatus('saved');
         } else {
-            setStatus("error");
+            setStatus('error');
         }
     };
 
     const deleteLikedAnimalInformation = async () => {
-        setStatus("loading");
+        setStatus('loading');
 
-        const { data, error } = await supabase
-            .from("likedAnimals")
-            .delete()
-            .eq("id", id);
+        const { data, error } = await supabase.from('likedAnimals').delete().eq('id', id);
 
         if (!error) {
-            setStatus("idle");
+            setStatus('idle');
         } else {
-            setStatus("error");
+            setStatus('error');
         }
     };
 
     useEffect(() => {
-        if (isSaved(id)) setStatus("saved");
+        if (isSaved(id)) setStatus('saved');
     }, []);
 
     useEffect(() => {
-        if (status === "idle" && added) {
+        if (status === 'idle' && added) {
             const likedData = {
                 imagePath,
                 name,
@@ -100,19 +96,18 @@ const PetCard = ({
 
             sendLikedAnimalInformation(likedData);
         }
-
-        if (status === "saved") {
+        if (status === 'saved') {
             deleteLiked(id);
 
             deleteLikedAnimalInformation();
         }
     }, [added]);
 
-    return status === "error" ? (
+    return status === 'error' ? (
         <ErrorCard />
     ) : (
-        <div className=" relative min-[1380px]:w-64 w-52  rounded-2xl bg-white shadow-lg ring-1 ring-black ring-opacity-5 cursor-pointer">
-            {status === "loading" ? (
+        <div className=" relative min-[1380px]:w-64 w-52  rounded-2xl bg-white shadow-lg hover:scale-105 ring-1 ring-black ring-opacity-5 cursor-pointer transition-all">
+            {status === 'loading' ? (
                 <>
                     <div className="top-2 right-2 absolute">
                         <svg
@@ -120,8 +115,7 @@ const PetCard = ({
                             className="inline w-10 h-10 mr-2 text-white animate-spin dark:text-gray-600 fill-red-300"
                             viewBox="0 0 100 101"
                             fill="rgb(55 65 81)"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
+                            xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
                                 fill="currentColor"
@@ -137,21 +131,14 @@ const PetCard = ({
             ) : (
                 <button
                     className="absolute top-2 right-2"
-                    onClick={() => setAdded((added) => !added)}
-                >
+                    onClick={() => setAdded((added) => !added)}>
                     <div className="peer absolute top-2 right-[7px] z-20">
-                        <Image
-                            width={30}
-                            height={30}
-                            src={heartIcon}
-                            alt="heartIcon"
-                        ></Image>
+                        <Image width={30} height={30} src={heartIcon} alt="heartIcon"></Image>
                     </div>
                     <div
                         className={`${
-                            status === "saved" ? "opacity-100" : "opacity-50 "
-                        }  w-11 h-11 flex justify-center items-center rounded-full z-10 bg-white  peer-hover:opacity-100  hover:opacity-100 transition-all `}
-                    ></div>
+                            status === 'saved' ? 'opacity-100' : 'opacity-50 '
+                        }  w-11 h-11 flex justify-center items-center rounded-full z-10 bg-white  peer-hover:opacity-100  hover:opacity-100 transition-all `}></div>
                 </button>
             )}
 
@@ -188,32 +175,25 @@ const PetCard = ({
                         <img
                             className=" rounded-t-2xl w-full h-full object-cover"
                             src={imagePath || cardBackground.src}
-                            alt={"animalImage"}
-                        ></img>
+                            alt={'animalImage'}></img>
                     </div>
 
-                    <div className=" flex justify-between items-center  flex-col py-6">
-                        <div className=" text-red-300 text-2xl text-center">
-                            {name}
-                        </div>
-
-                        {expanded && (
-                            <>
-                                <span className="text-gray-700 text-sm text-center">
-                                    {likedInfo}
-                                </span>
-                                <span className="text-gray-700 text-sm text-center">
-                                    {breed}
-                                </span>
-
-                                <div className="mt-1 text-lg underline text-red-300">
-                                    Start Your Inquiry
-                                </div>
-                            </>
-                        )}
-                    </div>
+                    <div className=" text-red-300 text-2xl text-center py-6">{name}</div>
                 </div>
             </Link>
+
+            {expanded && (
+                <div className=" flex justify-between items-center  flex-col pb-6">
+                    <span className="text-gray-700 text-sm text-center">{likedInfo}</span>
+                    <span className="text-gray-700 text-sm text-center">{breed}</span>
+
+                    <a
+                        href={petLink}
+                        className="mt-3 text-lg underline text-red-300 hover:text-red-400 transition-all">
+                        Start Your Inquiry
+                    </a>
+                </div>
+            )}
         </div>
     );
 };
