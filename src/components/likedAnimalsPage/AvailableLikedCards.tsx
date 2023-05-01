@@ -20,7 +20,7 @@ import { useSupabase } from '../../config/supabaseClient';
 import { StatusType } from '../../service/request';
 
 const AvailableLikedCards: React.FC = () => {
-    const { likedAnimals, loadLiked } = useLikedStore();
+    const { likedAnimals, loadLiked, sortLiked } = useLikedStore();
     const { supabase } = useSupabase();
 
     const [status, setStatus] = useState<StatusType>('idle');
@@ -28,10 +28,16 @@ const AvailableLikedCards: React.FC = () => {
     const fetchLikedPets = async () => {
         setStatus('loading');
 
+        const queryColumn = sortLiked === '-name' ? 'name' : sortLiked;
+        const queryOrder =
+            sortLiked === '-name' || sortLiked === 'likedAt'
+                ? { ascending: false }
+                : { ascending: true };
+
         const { data, error } = await supabase
             .from('likedAnimals')
             .select('*')
-            .order('likedAt', { ascending: true });
+            .order(queryColumn, queryOrder);
 
         if (!error && data) {
             loadLiked(data);
@@ -44,9 +50,9 @@ const AvailableLikedCards: React.FC = () => {
         }
     };
 
-    // useEffect(() => {
-    //     fetchLikedPets();
-    // }, []);
+    useEffect(() => {
+        fetchLikedPets();
+    }, [sortLiked]);
 
     switch (status) {
         case 'loading':

@@ -5,9 +5,12 @@ import { ChangeEvent, useState } from 'react';
 import { useFiltersStore } from '../../store/filtersStore/filtersStore';
 import { useLikedStore } from '../../store/likedStore/likedStore';
 
+import { TypeLikedSortOptions } from '../../../app/likedAnimals/page';
+import { TypeFiltersSortOptions } from '../../../app/availablePets/[pet]/page';
+
 type Props = {
     target: 'filters' | 'favorites';
-    options: string[][];
+    options: TypeFiltersSortOptions | TypeLikedSortOptions;
 };
 
 const SortBy: React.FC<Props> = ({ target, options }) => {
@@ -22,9 +25,9 @@ const SortBy: React.FC<Props> = ({ target, options }) => {
         setRequiredFilter('sort', e.target.value);
     };
 
-    // const handleLikedSortChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    //     changeSortLiked(e.target.value)
-    // }
+    const handleLikedSortChange = ({ target: { value } }: ChangeEvent<HTMLSelectElement>) => {
+        changeSortLiked(value as TypeLikedSortOptions[number][0]);
+    };
 
     return (
         <div className=" max-w-[250px] ml-2">
@@ -34,7 +37,7 @@ const SortBy: React.FC<Props> = ({ target, options }) => {
             <select
                 id="sortBy"
                 value={target === 'filters' ? sort : sortLiked}
-                onChange={handleFiltersChange}
+                onChange={target === 'filters' ? handleFiltersChange : handleLikedSortChange}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-300 focus:border-red-300 focus:outline-none hover:border-red-300 transition-all block w-full p-2.5 ">
                 {/* <option value="recent">Newest addition</option>
                 <option value="-recent">Oldest addition</option>

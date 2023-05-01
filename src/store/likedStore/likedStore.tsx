@@ -8,7 +8,7 @@ export interface ILikedAnimal extends IPetCard {
     likedAt: string;
 }
 
-type SortLiked = 'likedAt' | 'publishedAt' | 'name';
+type SortLiked = 'likedAt' | 'name' | '-name' | 'publishedAt';
 
 export default class LikedStore {
     constructor() {

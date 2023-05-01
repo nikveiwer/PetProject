@@ -1,20 +1,26 @@
-import AppliedFilters from "../../../src/components/availablePetsPage/AppliedFilters";
-import SortBy from "../../../src/components/availablePetsPage/SortBy";
-import Filters from "../../../src/components/availablePetsPage/Filters";
-import AvailableCards from "../../../src/components/availablePetsPage/AvailableCards";
-import Pagination from "../../../src/components/availablePetsPage/Pagination";
-import FiltersOpenButton from "../../../src/components/availablePetsPage/FiltersOpenButton";
+import AppliedFilters from '../../../src/components/availablePetsPage/AppliedFilters';
+import SortBy from '../../../src/components/availablePetsPage/SortBy';
+import Filters from '../../../src/components/availablePetsPage/Filters';
+import AvailableCards from '../../../src/components/availablePetsPage/AvailableCards';
+import Pagination from '../../../src/components/availablePetsPage/Pagination';
+import FiltersOpenButton from '../../../src/components/availablePetsPage/FiltersOpenButton';
 
 type Props = {
     params: {
-        pet: "cats" | "dogs";
+        pet: 'cats' | 'dogs';
     };
 };
 
-const sortFiltersOptions = [
-    ["recent", "Newest addition"],
-    ["-recent", "Oldest addition"],
-    ["random", "Randomize"],
+export type TypeFiltersSortOptions = [
+    ['recent', 'Newest addition'],
+    ['-recent', 'Oldest addition'],
+    ['random', 'Randomize'],
+];
+
+const sortFiltersOptions: TypeFiltersSortOptions = [
+    ['recent', 'Newest addition'],
+    ['-recent', 'Oldest addition'],
+    ['random', 'Randomize'],
 ];
 
 export default async function AvailablePets({ params: { pet } }: Props) {
@@ -22,8 +28,7 @@ export default async function AvailablePets({ params: { pet } }: Props) {
         <>
             <section className=" relative min-h-[500px] xl:px-40 lg:px-14 py-4 px-3">
                 <h2 className=" mb-11 sm:text-5xl text-3xl text-red-300 text-center">
-                    {pet.charAt(0).toUpperCase() + pet.slice(1)} Available for
-                    Adoption
+                    {pet.charAt(0).toUpperCase() + pet.slice(1)} Available for Adoption
                 </h2>
 
                 <div className="relative flex justify-start gap-7 ">
@@ -33,13 +38,9 @@ export default async function AvailablePets({ params: { pet } }: Props) {
                             <AppliedFilters pet={pet} />
                             <div
                                 className="flex justify-between order-first mb-5 lg:order-last lg:mb-0
-                            "
-                            >
+                            ">
                                 <FiltersOpenButton />
-                                <SortBy
-                                    target={"filters"}
-                                    options={sortFiltersOptions}
-                                />
+                                <SortBy target={'filters'} options={sortFiltersOptions} />
                             </div>
                         </div>
                         <AvailableCards searchedType={pet}></AvailableCards>
