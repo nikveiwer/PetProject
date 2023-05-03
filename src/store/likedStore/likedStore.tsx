@@ -1,14 +1,14 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable } from "mobx";
 
-import { createContext, useContext } from 'react';
+import { createContext, useContext } from "react";
 
-import { IPetCard } from '../../types/types';
+import { IPetCard } from "../../types/types";
 
 export interface ILikedAnimal extends IPetCard {
     likedAt: string;
 }
 
-type SortLiked = 'likedAt' | 'name' | '-name' | 'publishedAt';
+type SortLiked = "likedAt" | "name" | "-name" | "publishedAt";
 
 export default class LikedStore {
     constructor() {
@@ -17,9 +17,13 @@ export default class LikedStore {
 
     likedAnimals: ILikedAnimal[] = [];
 
-    sortLiked: SortLiked = 'likedAt';
+    sortLiked: SortLiked = "likedAt";
 
-    isSaved = (cardId: ILikedAnimal['id']) => {
+    get numberOfLiked() {
+        return this.likedAnimals.length;
+    }
+
+    isSaved = (cardId: ILikedAnimal["id"]) => {
         return this.likedAnimals.some((item) => item.id === cardId);
     };
 
@@ -31,8 +35,10 @@ export default class LikedStore {
         this.likedAnimals.push(addedLiked);
     };
 
-    deleteLiked = (deletedId: ILikedAnimal['id']) => {
-        this.likedAnimals = this.likedAnimals.filter(({ id }) => id !== deletedId);
+    deleteLiked = (deletedId: ILikedAnimal["id"]) => {
+        this.likedAnimals = this.likedAnimals.filter(
+            ({ id }) => id !== deletedId
+        );
     };
 
     changeSortLiked = (option: SortLiked) => {
@@ -40,6 +46,8 @@ export default class LikedStore {
     };
 }
 
-export const LikedStoreContext = createContext<LikedStore>(null as unknown as LikedStore);
+export const LikedStoreContext = createContext<LikedStore>(
+    null as unknown as LikedStore
+);
 
 export const useLikedStore = () => useContext(LikedStoreContext);

@@ -1,42 +1,37 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
-import { PetsFetching } from '../../service/fetching';
+import PetCard from "../mainPage/PetCard";
+import { SkeletonCard } from "../mainPage/SkeletonCard";
+import { NoLikedWindow } from "./NoLikedWindow";
 
-import PetCard from '../mainPage/PetCard';
-import { SkeletonCard } from '../mainPage/SkeletonCard';
+import { observer } from "mobx-react-lite";
 
-import { ICurrentFilters, isAnimals } from '../../types/types';
-import { IAnimals } from '../../types/types';
-import { IPetCard } from '../../types/types';
+import { useLikedStore } from "../../store/likedStore/likedStore";
+import { useSupabase } from "../../config/supabaseClient";
 
-import { observer } from 'mobx-react-lite';
-import { useAuthStore } from '../../store/authStore/authStore';
-import { useFiltersStore } from '../../store/filtersStore/filtersStore';
-import { useLikedStore } from '../../store/likedStore/likedStore';
-import { useSupabase } from '../../config/supabaseClient';
-
-import { StatusType } from '../../service/request';
+import { StatusType } from "../../service/request";
 
 const AvailableLikedCards: React.FC = () => {
-    const { likedAnimals, loadLiked, sortLiked } = useLikedStore();
+    const { likedAnimals, loadLiked, sortLiked, numberOfLiked } =
+        useLikedStore();
     const { supabase } = useSupabase();
 
-    const [status, setStatus] = useState<StatusType>('idle');
+    const [status, setStatus] = useState<StatusType>("idle");
 
     const fetchLikedPets = async () => {
-        setStatus('loading');
+        setStatus("loading");
 
-        const queryColumn = sortLiked === '-name' ? 'name' : sortLiked;
+        const queryColumn = sortLiked === "-name" ? "name" : sortLiked;
         const queryOrder =
-            sortLiked === '-name' || sortLiked === 'likedAt'
+            sortLiked === "-name" || sortLiked === "likedAt"
                 ? { ascending: false }
                 : { ascending: true };
 
         const { data, error } = await supabase
-            .from('likedAnimals')
-            .select('*')
+            .from("likedAnimals")
+            .select("*")
             .order(queryColumn, queryOrder);
 
         if (!error && data) {
@@ -44,9 +39,9 @@ const AvailableLikedCards: React.FC = () => {
 
             console.log(data);
 
-            setStatus('idle');
+            setStatus("idle");
         } else {
-            setStatus('error');
+            setStatus("error");
         }
     };
 
@@ -54,8 +49,12 @@ const AvailableLikedCards: React.FC = () => {
         fetchLikedPets();
     }, [sortLiked]);
 
+    if (status === "idle" && !numberOfLiked) {
+        return <NoLikedWindow />;
+    }
+
     switch (status) {
-        case 'loading':
+        case "loading":
             return (
                 <div className=" py-9 px-3 grid lg:grid-cols-4 min-[873px]:grid-cols-4 min-[683px]:grid-cols-3 min-[455px]:grid-cols-2 grid-cols-1 grid-rows-3 auto-rows-auto justify-between justify-items-center gap-7 ">
                     {[...new Array(12)].map((item, i) => {
@@ -63,18 +62,25 @@ const AvailableLikedCards: React.FC = () => {
                     })}
                 </div>
             );
-        case 'idle':
+        case "idle":
             return (
                 <div className="  py-9 px-3 grid min-[1630px]:grid-cols-4 lg:grid-cols-3 min-[873px]:grid-cols-4 min-[683px]:grid-cols-3 min-[455px]:grid-cols-2 grid-cols-1  grid-rows-3 auto-rows-auto justify-between justify-items-center gap-7 ">
                     {likedAnimals.map(({ id, ...rest }) => {
-                        return <PetCard key={id} id={id} {...rest} expanded></PetCard>;
+                        return (
+                            <PetCard
+                                key={id}
+                                id={id}
+                                {...rest}
+                                expanded
+                            ></PetCard>
+                        );
                     })}
                 </div>
             );
-        case 'error':
-            return <div>Ошибка</div>;
+        case "error":
+            return <div>Error</div>;
         default:
-            return <div>Ошибка</div>;
+            return <div>Error</div>;
     }
 };
 
