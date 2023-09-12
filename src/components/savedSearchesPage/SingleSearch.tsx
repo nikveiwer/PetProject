@@ -15,12 +15,13 @@ import { useState } from "react";
 
 type Props = {
     id: string;
+    user_id: string;
     item: ICurrentFilters;
 };
 
 // xl:w-56 lg:w-52 w-[184px] h-[340px]
 
-const SingleSearch: React.FC<Props> = ({ id, item }) => {
+const SingleSearch: React.FC<Props> = ({ id, user_id, item }) => {
     const router = useRouter();
 
     const { onSearchLaunch } = useFiltersStore();
@@ -41,7 +42,7 @@ const SingleSearch: React.FC<Props> = ({ id, item }) => {
     };
 
     const onChangeClick = () => {
-        changeSearch(id, changedSearch);
+        changeSearch(id, user_id, changedSearch);
 
         setChange(false);
     };

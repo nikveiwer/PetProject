@@ -113,7 +113,7 @@ const SavedSearches: React.FC = () => {
         case "idle":
             return (
                 <ul className="mt-5 flex flex-col justify-start gap-3">
-                    {searches.map(({ id, ...item }) => {
+                    {searches.map(({ id, user_id, ...item }) => {
                         return (
                             <li
                                 key={id}
@@ -121,6 +121,7 @@ const SavedSearches: React.FC = () => {
                             >
                                 <SingleSearch
                                     id={id}
+                                    user_id={user_id}
                                     item={item}
                                 ></SingleSearch>
                             </li>

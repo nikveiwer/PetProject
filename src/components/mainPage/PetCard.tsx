@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 
 import { useSupabase } from "../../config/supabaseClient";
 import { ILikedAnimal, useLikedStore } from "../../store/likedStore/likedStore";
+import { useRouter } from "next/navigation";
 
 type StatusType = "idle" | "error" | "loading" | "saved";
 interface Props extends IPetCard {
@@ -45,11 +46,12 @@ const PetCard = ({
     const [status, setStatus] = useState<StatusType>("idle");
     const [added, setAdded] = useState<boolean>(false);
 
-    const { supabase } = useSupabase();
+    const { supabase, user } = useSupabase();
     const { addLiked, deleteLiked, isSaved } = useLikedStore();
+    const router = useRouter();
 
-    console.log(`Pet card status: ${status}`);
-    console.log(`Pet card added: ${added}`);
+    // console.log(`Pet card status: ${status}`);
+    // console.log(`Pet card added: ${added}`);
 
     const sendLikedAnimalInformation = async (likedData: ILikedAnimal) => {
         setStatus("loading");
@@ -69,7 +71,7 @@ const PetCard = ({
         setStatus("loading");
 
         const { data, error } = await supabase
-            .from("likedAnimal")
+            .from("likedAnimals")
             .delete()
             .eq("id", id);
 
@@ -85,6 +87,11 @@ const PetCard = ({
     }, []);
 
     useEffect(() => {
+        if (!user) {
+            router.push("authAndReg/SignIn");
+            return;
+        }
+
         if (status === "idle" && added) {
             const likedData = {
                 imagePath,
@@ -95,6 +102,7 @@ const PetCard = ({
                 petLink,
                 publishedAt,
                 likedAt: new Date().toISOString(),
+                user_id: "e5b9d961-27ec-48df-a935-c7d8abad2054",
             };
 
             addLiked(likedData);

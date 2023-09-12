@@ -16,7 +16,7 @@ import { StatusType } from "../../service/request";
 const AvailableLikedCards: React.FC = () => {
     const { likedAnimals, loadLiked, sortLiked, numberOfLiked } =
         useLikedStore();
-    const { supabase } = useSupabase();
+    const { supabase, user } = useSupabase();
 
     const [status, setStatus] = useState<StatusType>("idle");
 
@@ -32,6 +32,7 @@ const AvailableLikedCards: React.FC = () => {
         const { data, error } = await supabase
             .from("likedAnimals")
             .select("*")
+            .eq("user_id", user?.id ?? "")
             .order(queryColumn, queryOrder);
 
         if (!error && data) {

@@ -79,10 +79,6 @@ const AppliedFilters: React.FC<Props> = ({ pet }) => {
             if (!isAlreadyExist.error) {
                 if (isAlreadyExist.data && isAlreadyExist.data.length) {
                     setStatus("already");
-
-                    // setTimeout(() => {
-                    //     setStatus("idle");
-                    // }, 4000);
                 } else {
                     let { data, error } = await supabase
                         .from("savedSearches")
@@ -91,10 +87,6 @@ const AppliedFilters: React.FC<Props> = ({ pet }) => {
                     if (!error) {
                         5;
                         setStatus("successful");
-
-                        // setTimeout(() => {
-                        //     setStatus("idle");
-                        // }, 4000);
                     } else {
                         setStatus("error");
                     }
@@ -172,7 +164,12 @@ const AppliedFilters: React.FC<Props> = ({ pet }) => {
                             isAnyAppliedFilters || "hidden"
                         } min-h-[25px] rounded-4xl bg-red-300 px-2 text-center text-white`}
                         onClick={() =>
-                            addSearch({ id: uuid4(), ...filters, type: pet })
+                            addSearch({
+                                id: uuid4(),
+                                ...filters,
+                                type: pet,
+                                user_id: "e5b9d961-27ec-48df-a935-c7d8abad2054",
+                            })
                         }
                     >
                         Save this search

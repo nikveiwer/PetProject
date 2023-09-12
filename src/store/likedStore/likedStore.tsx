@@ -6,6 +6,7 @@ import { IPetCard } from "../../types/types";
 
 export interface ILikedAnimal extends IPetCard {
     likedAt: string;
+    user_id: string;
 }
 
 type SortLiked = "likedAt" | "name" | "-name" | "publishedAt";

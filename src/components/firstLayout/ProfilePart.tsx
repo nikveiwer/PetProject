@@ -20,7 +20,7 @@ import { useLikedStore } from "../../store/likedStore/likedStore";
 
 const ProfilePart: React.FC = () => {
     const { accessToken, setAPIAuthData, accessTimeLeft } = useAuthStore();
-    const { supabase } = useSupabase();
+    const { supabase, user } = useSupabase();
     const { loadLiked } = useLikedStore();
 
     const { status, setStatus, getAuthData } = PetsFetching();
@@ -70,7 +70,7 @@ const ProfilePart: React.FC = () => {
         };
     }, []);
 
-    if (status === "idle") {
+    if (status === "idle" && user) {
         return (
             <div className=" flex items-center relative">
                 <div className="mr-5 cursor-pointer  hover:border-red-300 border-[1px] border-white rounded-lg transition-all">
@@ -99,6 +99,7 @@ const ProfilePart: React.FC = () => {
                     </div>
                     <div className=" pl-5 text-lg text-gray-700">
                         nikveiwer dfvdfvf
+                        {user.user_metadata.username}
                     </div>
                 </button>
 
@@ -136,7 +137,25 @@ const ProfilePart: React.FC = () => {
             </div>
         );
     } else {
-        return <div>Log in</div>;
+        return (
+            <div>
+                <span>
+                    <Link
+                        href="authAndReg/SignIn"
+                        className=" text-lg text-red-300 underline"
+                    >
+                        Sign In
+                    </Link>
+                    {" or "}
+                    <Link
+                        href="authAndReg/SignUp"
+                        className=" text-lg text-red-300 underline"
+                    >
+                        Sign Up
+                    </Link>
+                </span>
+            </div>
+        );
     }
 };
 

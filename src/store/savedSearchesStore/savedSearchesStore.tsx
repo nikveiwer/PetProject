@@ -9,6 +9,7 @@ import _ from "lodash";
 
 export interface ISavedSearches extends ICurrentFilters {
     id: string;
+    user_id: string;
 }
 
 export function isSavedSearches(T: unknown): T is ISavedSearches {
@@ -66,18 +67,23 @@ export default class SavedSearchesStore {
         this.visibleSearches = param;
     };
 
-    changeSearch = (id: ISavedSearches["id"], newSearch: ICurrentFilters) => {
+    changeSearch = (
+        id: ISavedSearches["id"],
+        user_id: ISavedSearches["user_id"],
+        newSearch: ICurrentFilters
+    ) => {
         this.savedSearches = this.savedSearches.map((item) => {
             if (item.id === id) {
                 return {
                     id,
+                    user_id,
                     ...newSearch,
                 };
             }
             return item;
         });
 
-        this.changedSearch = { id, ...newSearch };
+        this.changedSearch = { id, user_id, ...newSearch };
     };
 
     get allCount() {

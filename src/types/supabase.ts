@@ -15,6 +15,7 @@ export interface Database {
                   name: string 
                   petLink: string
                   publishedAt: string
+                  user_id: string
                 }
                 Insert: {
                   breed?: string | null
@@ -25,6 +26,7 @@ export interface Database {
                   name?: string | null
                   petLink?: string | null
                   publishedAt: string
+                  user_id?: string
                 }
                 Update: {
                   breed?: string | null
@@ -35,6 +37,7 @@ export interface Database {
                   name?: string | null
                   petLink?: string | null
                   publishedAt?: string
+                  user_id?: string
                 }
               },
             savedSearches: {
@@ -51,6 +54,7 @@ export interface Database {
                     color: string;
                     name: string;
                     id: string;
+                    user_id: string
                 };
                 // Insert: Partial<ISavedSearches>;
                 Insert: {
@@ -65,6 +69,7 @@ export interface Database {
                     size?: string;
                     sort?: string;
                     type?: string;
+                    user_id?: string
                 };
                 // Update: Partial<ISavedSearches>;
                 Update: {
@@ -79,6 +84,7 @@ export interface Database {
                     size?: string;
                     sort?: string;
                     type?: string;
+                    user_id?: string
                 };
             };
         };
