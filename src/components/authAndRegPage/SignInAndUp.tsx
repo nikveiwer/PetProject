@@ -8,8 +8,10 @@ import { MainInput } from "../Inputs/MainInput";
 import { AuthButtons } from "./AuthButtons";
 
 export type ErrorMessages = {
-    email: string;
-    username: string;
+    email?: string;
+    username?: string;
+    password?: string;
+    passwordConfirm?: string;
 };
 
 export const SignInAndUp: React.FC<{ type: string }> = ({ type }) => {
@@ -24,10 +26,17 @@ export const SignInAndUp: React.FC<{ type: string }> = ({ type }) => {
 
     const [email, setEmail] = useState<string>("");
     const [username, setUsername] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
+    const [passwordConfirm, setPasswordConfirm] = useState<string>("");
     const [errorMessages, setErrorMessages] = useState<ErrorMessages>({
         email: "Error Message",
         username: "",
+        password: "",
+        passwordConfirm: "",
     });
+
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [authError, setAuthError] = useState<string>("");
 
     const resetError = (errorKey: keyof ErrorMessages) => {
         setErrorMessages((prev) => ({
@@ -36,17 +45,50 @@ export const SignInAndUp: React.FC<{ type: string }> = ({ type }) => {
         }));
     };
 
-    const SignInValidate = () => {
-        const errors = {} as ErrorMessages;
+    const SignInValidationErrors = (): ErrorMessages => {
+        const errors: ErrorMessages = {};
+
+        if (!email.length) {
+            errors.email = "Required field";
+        }
+
+        if (!password.length) {
+            errors.password = "Required field";
+        }
+
+        return errors;
+    };
+
+    const SignUpValidationErrors = (): ErrorMessages => {
+        const errors: ErrorMessages = {};
 
         if (username.length < 5) {
             errors.username = "Username must contain at least 5 symbols";
         }
 
+        if (!email.length) {
+            errors.email = "Required field";
+        }
+
+        if (!password.length) {
+            errors.password = "Required field";
+        }
+
         const validateEmailRegex = /^\S+@\S+\.\S+$/;
         if (!validateEmailRegex.test(email)) {
+            errors.email = "Incorrect email";
         }
+
+        if (password !== passwordConfirm) {
+            errors.passwordConfirm = "Passwords must be the same";
+        }
+
+        return errors;
     };
+
+    // const onSignIn = () => {
+    //     const errors
+    // }
 
     const signUp = () => {
         supabase.auth.signUp({
@@ -82,31 +124,33 @@ export const SignInAndUp: React.FC<{ type: string }> = ({ type }) => {
             </div>
 
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                <form className="space-y-6" action="#" method="POST">
-                    <div>
-                        <label
-                            htmlFor="email"
-                            className="block text-sm font-medium leading-6 text-gray-700"
-                        >
-                            Email address
-                        </label>
-                        <div className="mt-2">
-                            <input
-                                id="email"
-                                name="email"
-                                type="email"
-                                autoComplete="email"
-                                required
-                                className="block w-full rounded-md border-0 py-1.5 text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-red-300 sm:text-sm sm:leading-6"
-                            />
-                        </div>
+                {authError && (
+                    <div className=" my-3 mx-auto py-5 px-4 border-[2px] border-red-300 rounded-md text-red-300 text-md text-center">
+                        {authError}
                     </div>
+                )}
+                <form className="space-y-6" action="#" method="POST">
+                    {type === "SignUp" && (
+                        <MainInput
+                            title="Username"
+                            identificator="username"
+                            autoComplete="username"
+                            value={username}
+                            disabled={isLoading}
+                            setValue={(e: ChangeEvent<HTMLInputElement>) =>
+                                setUsername(e.target.value)
+                            }
+                            resetError={() => resetError("username")}
+                            errorMessage={errorMessages.username}
+                        />
+                    )}
 
                     <MainInput
                         title="Email address"
                         identificator="email"
-                        autoComplete="email"
+                        type="email"
                         value={email}
+                        disabled={isLoading}
                         setValue={(e: ChangeEvent<HTMLInputElement>) =>
                             setEmail(e.target.value)
                         }
@@ -114,51 +158,39 @@ export const SignInAndUp: React.FC<{ type: string }> = ({ type }) => {
                         errorMessage={errorMessages.email}
                     />
 
-                    {type === "SignUp" && (
-                        <div>
-                            <label
-                                htmlFor="email"
-                                className="block text-sm font-medium leading-6 text-gray-700"
-                            >
-                                Email address
-                            </label>
-                            <div className="mt-2">
-                                <input
-                                    id="email"
-                                    name="email"
-                                    type="email"
-                                    autoComplete="email"
-                                    required
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-red-300 sm:text-sm sm:leading-6"
-                                />
-                            </div>
-                        </div>
-                    )}
+                    <MainInput
+                        title="Password"
+                        identificator="password"
+                        type={"password"}
+                        value={password}
+                        disabled={isLoading}
+                        setValue={(e: ChangeEvent<HTMLInputElement>) =>
+                            setPassword(e.target.value)
+                        }
+                        resetError={() => resetError("email")}
+                        errorMessage={errorMessages.password}
+                    />
 
-                    <div>
-                        <div className="flex items-center justify-between">
-                            <label
-                                htmlFor="password"
-                                className="block text-sm font-medium leading-6 text-gray-700"
-                            >
-                                Password
-                            </label>
-                        </div>
-                        <div className="mt-2">
-                            <input
-                                id="password"
-                                name="password"
-                                type="password"
-                                autoComplete="current-password"
-                                required
-                                className="block w-full rounded-md border-0 py-1.5 text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-red-300 sm:text-sm sm:leading-6"
-                            />
-                        </div>
-                    </div>
+                    {type === "SignUp" && (
+                        <MainInput
+                            title="Password confirmation"
+                            identificator="passwordConfirm"
+                            type={"password"}
+                            placeholder={"Repeat your password here"}
+                            value={passwordConfirm}
+                            disabled={isLoading}
+                            setValue={(e: ChangeEvent<HTMLInputElement>) =>
+                                setPasswordConfirm(e.target.value)
+                            }
+                            resetError={() => resetError("passwordConfirm")}
+                            errorMessage={errorMessages.passwordConfirm}
+                        />
+                    )}
 
                     <div>
                         <button
                             type="submit"
+                            disabled={isLoading}
                             className="flex w-full justify-center rounded-md bg-red-300 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-400 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                         >
                             Sign in

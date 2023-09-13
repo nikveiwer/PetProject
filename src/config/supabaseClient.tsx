@@ -45,6 +45,8 @@ export default function SupabaseProvider({
         } = supabase.auth.onAuthStateChange((event, session) => {
             router.refresh();
 
+            console.log("Event happen", event);
+
             if (event === "SIGNED_IN") {
                 router.back();
             }

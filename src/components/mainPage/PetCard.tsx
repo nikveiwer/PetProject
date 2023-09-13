@@ -82,16 +82,20 @@ const PetCard = ({
         }
     };
 
-    useEffect(() => {
-        if (isSaved(id)) setStatus("saved");
-    }, []);
-
-    useEffect(() => {
+    const checkAndChangeAddState = () => {
         if (!user) {
             router.push("authAndReg/SignIn");
             return;
         }
 
+        setAdded((added) => !added);
+    };
+
+    useEffect(() => {
+        if (isSaved(id)) setStatus("saved");
+    }, []);
+
+    useEffect(() => {
         if (status === "idle" && added) {
             const likedData = {
                 imagePath,
@@ -145,7 +149,7 @@ const PetCard = ({
             ) : (
                 <button
                     className="absolute top-2 right-2"
-                    onClick={() => setAdded((added) => !added)}
+                    onClick={checkAndChangeAddState}
                 >
                     <div className="peer absolute top-2 right-[7px] z-20">
                         <Image

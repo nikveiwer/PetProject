@@ -17,11 +17,13 @@ import profiletIcon from "../../../public/assets/icons/profile.svg";
 import Link from "next/link";
 import { useSupabase } from "../../config/supabaseClient";
 import { useLikedStore } from "../../store/likedStore/likedStore";
+import { usePathname } from "next/navigation";
 
 const ProfilePart: React.FC = () => {
     const { accessToken, setAPIAuthData, accessTimeLeft } = useAuthStore();
     const { supabase, user } = useSupabase();
     const { loadLiked } = useLikedStore();
+    const pathname = usePathname();
 
     const { status, setStatus, getAuthData } = PetsFetching();
 
@@ -136,7 +138,10 @@ const ProfilePart: React.FC = () => {
                 </ul>
             </div>
         );
-    } else {
+    } else if (
+        pathname !== "/authAndReg/SignUp" &&
+        pathname !== "/authAndReg/SignIn"
+    ) {
         return (
             <div>
                 <span>
@@ -156,6 +161,8 @@ const ProfilePart: React.FC = () => {
                 </span>
             </div>
         );
+    } else {
+        return null;
     }
 };
 
