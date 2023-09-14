@@ -10,6 +10,7 @@ interface MainInputProps {
     placeholder?: string;
     autoComplete?: string;
     required?: boolean;
+    disabled?: boolean;
     errorMessage?: string;
     value: string;
     setValue?: (event: ChangeEvent<HTMLInputElement>) => void;
@@ -23,6 +24,7 @@ export const MainInput: React.FC<MainInputProps> = ({
     placeholder,
     autoComplete,
     required,
+    disabled,
     errorMessage,
     value,
     setValue,
@@ -44,15 +46,15 @@ export const MainInput: React.FC<MainInputProps> = ({
                     placeholder={placeholder}
                     autoComplete={autoComplete}
                     required={required}
+                    disabled={disabled}
                     value={value}
                     onChange={setValue}
                     onBlur={resetError}
                     onFocus={resetError}
-                    readOnly
                     className={`block w-full rounded-md border-0 py-1.5 px-3 text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-inset focus:ring-red-300 sm:text-sm sm:leading-6 ${
                         errorMessage &&
                         "ring-red-500 focus:ring-red-500 ring-2 ring-inset"
-                    }`}
+                    } ${disabled && "opacity-50 cursor-default"}`}
                 />
             </div>
             {errorMessage && (

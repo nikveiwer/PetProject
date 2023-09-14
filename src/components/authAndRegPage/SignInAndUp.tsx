@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useSupabase } from "../../config/supabaseClient";
 import { MainInput } from "../Inputs/MainInput";
 import { AuthButtons } from "./AuthButtons";
@@ -18,18 +18,18 @@ export const SignInAndUp: React.FC<{ type: string }> = ({ type }) => {
     const { supabase, user } = useSupabase();
     const router = useRouter();
 
-    // useEffect(() => {
-    //     if (user) {
-    //         router.push("/");
-    //     }
-    // }, [user, router]);
+    useEffect(() => {
+        if (user) {
+            router.push("/");
+        }
+    }, [user, router]);
 
     const [email, setEmail] = useState<string>("");
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [passwordConfirm, setPasswordConfirm] = useState<string>("");
     const [errorMessages, setErrorMessages] = useState<ErrorMessages>({
-        email: "Error Message",
+        email: "",
         username: "",
         password: "",
         passwordConfirm: "",
@@ -45,7 +45,14 @@ export const SignInAndUp: React.FC<{ type: string }> = ({ type }) => {
         }));
     };
 
-    const SignInValidationErrors = (): ErrorMessages => {
+    const settingNewErrors = (newErrors: ErrorMessages) => {
+        setErrorMessages((prev) => ({
+            ...prev,
+            ...newErrors,
+        }));
+    };
+
+    const signInValidationErrors = (): ErrorMessages => {
         const errors: ErrorMessages = {};
 
         if (!email.length) {
@@ -59,24 +66,28 @@ export const SignInAndUp: React.FC<{ type: string }> = ({ type }) => {
         return errors;
     };
 
-    const SignUpValidationErrors = (): ErrorMessages => {
+    const signUpValidationErrors = (): ErrorMessages => {
         const errors: ErrorMessages = {};
 
         if (username.length < 5) {
             errors.username = "Username must contain at least 5 symbols";
         }
 
+        const validateEmailRegex = /^\S+@\S+\.\S+$/;
+        if (!validateEmailRegex.test(email)) {
+            errors.email = "Incorrect email";
+        }
+
         if (!email.length) {
             errors.email = "Required field";
         }
 
-        if (!password.length) {
-            errors.password = "Required field";
+        if (password.length < 6) {
+            errors.password = "Password should be at least 6 characters";
         }
 
-        const validateEmailRegex = /^\S+@\S+\.\S+$/;
-        if (!validateEmailRegex.test(email)) {
-            errors.email = "Incorrect email";
+        if (!password.length) {
+            errors.password = "Required field";
         }
 
         if (password !== passwordConfirm) {
@@ -86,50 +97,85 @@ export const SignInAndUp: React.FC<{ type: string }> = ({ type }) => {
         return errors;
     };
 
-    // const onSignIn = () => {
-    //     const errors
-    // }
+    const onSubmit = async () => {
+        const isSignIn = type === "SignIn";
 
-    const signUp = () => {
-        supabase.auth.signUp({
-            email: "ulanov20029@gmail.com",
-            password: "1234vddd2545vf",
+        const errors = isSignIn
+            ? signInValidationErrors()
+            : signUpValidationErrors();
+
+        if (Object.keys(errors).length) {
+            settingNewErrors(errors);
+            return;
+        }
+
+        setIsLoading(true);
+        setAuthError("");
+
+        try {
+            if (isSignIn) {
+                await signIn();
+            } else {
+                await signUp();
+            }
+        } catch (e) {
+            const message = (e as { error_description: string })
+                .error_description;
+
+            setAuthError(message);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const signUp = async () => {
+        const response = await supabase.auth.signUp({
+            email,
+            password,
             options: {
                 data: {
-                    username: "someUsername",
+                    username,
                 },
             },
         });
+
+        console.log("Sign up response", response);
+
+        if (response.error) {
+            setAuthError(response.error.message);
+        }
     };
 
-    const signIn = () => {
-        supabase.auth.signInWithPassword({
-            email: "ulanov20029@gmail.com",
-            password: "1234vddd2545vf", //"1234vddd2"
+    const signIn = async () => {
+        const response = await supabase.auth.signInWithPassword({
+            email,
+            password,
         });
-    };
 
-    const signOut = () => {
-        supabase.auth.signOut();
+        console.log("Log in response", response);
+
+        if (response.error) {
+            setAuthError(response.error.message);
+        }
     };
 
     return (
-        <section className="flex min-h-[calc(100vh-153px)] flex-col justify-center px-6 pb-12 lg:px-8">
-            <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-                <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-700">
-                    {type === "SignIn"
-                        ? "Sign In to your account"
-                        : "Sign Up your new account"}
-                </h2>
-            </div>
+        <section className="flex min-h-[calc(100vh-153px)] flex-col justify-center px-6 pb-12 lg:px-8 bg-red-300">
+            <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm px-8 py-3 bg-white rounded-lg">
+                <div className="mb-5 sm:mx-auto sm:w-full sm:max-w-sm">
+                    <h2 className="text-center text-2xl font-bold leading-9 tracking-tight text-gray-700">
+                        {type === "SignIn"
+                            ? "Sign In to your account"
+                            : "Sign Up your new account"}
+                    </h2>
+                </div>
 
-            <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
                 {authError && (
                     <div className=" my-3 mx-auto py-5 px-4 border-[2px] border-red-300 rounded-md text-red-300 text-md text-center">
                         {authError}
                     </div>
                 )}
-                <form className="space-y-6" action="#" method="POST">
+                <form className="space-y-6">
                     {type === "SignUp" && (
                         <MainInput
                             title="Username"
@@ -167,7 +213,7 @@ export const SignInAndUp: React.FC<{ type: string }> = ({ type }) => {
                         setValue={(e: ChangeEvent<HTMLInputElement>) =>
                             setPassword(e.target.value)
                         }
-                        resetError={() => resetError("email")}
+                        resetError={() => resetError("password")}
                         errorMessage={errorMessages.password}
                     />
 
@@ -189,11 +235,16 @@ export const SignInAndUp: React.FC<{ type: string }> = ({ type }) => {
 
                     <div>
                         <button
-                            type="submit"
+                            type="button"
+                            onClick={onSubmit}
                             disabled={isLoading}
-                            className="flex w-full justify-center rounded-md bg-red-300 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-400 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                            className={`flex w-full justify-center rounded-md bg-red-300 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-400 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600,
+                            ${
+                                isLoading &&
+                                "opacity-50 cursor-default hover:none"
+                            }`}
                         >
-                            Sign in
+                            Sign {type.slice(4)}
                         </button>
                     </div>
 
