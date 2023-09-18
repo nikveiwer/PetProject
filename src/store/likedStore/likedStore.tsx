@@ -4,9 +4,17 @@ import { createContext, useContext } from "react";
 
 import { IPetCard } from "../../types/types";
 
-export interface ILikedAnimal extends IPetCard {
+export interface ILikedAnimal {
+    id: string;
+    api_id: number;
     likedAt: string;
     user_id: string;
+    name: string;
+    imagePath: string;
+    likedInfo: string;
+    breed: string;
+    petLink: string;
+    publishedAt: string;
 }
 
 type SortLiked = "likedAt" | "name" | "-name" | "publishedAt";
@@ -24,8 +32,8 @@ export default class LikedStore {
         return this.likedAnimals.length;
     }
 
-    isSaved = (cardId: ILikedAnimal["id"]) => {
-        return this.likedAnimals.some((item) => item.id === cardId);
+    isSaved = (cardId: ILikedAnimal["api_id"]) => {
+        return this.likedAnimals.some((item) => item.api_id === cardId);
     };
 
     loadLiked = (fetchedLiked: ILikedAnimal[]) => {
@@ -36,9 +44,9 @@ export default class LikedStore {
         this.likedAnimals.push(addedLiked);
     };
 
-    deleteLiked = (deletedId: ILikedAnimal["id"]) => {
+    deleteLiked = (deletedId: ILikedAnimal["api_id"]) => {
         this.likedAnimals = this.likedAnimals.filter(
-            ({ id }) => id !== deletedId
+            ({ api_id }) => api_id !== deletedId
         );
     };
 

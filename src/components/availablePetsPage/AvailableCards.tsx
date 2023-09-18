@@ -116,7 +116,7 @@ const AvailableCards: React.FC<Props> = ({ searchedType }) => {
                         return (
                             <PetCard
                                 key={id}
-                                id={id}
+                                api_id={id}
                                 {...petCard}
                                 expanded={false}
                             ></PetCard>

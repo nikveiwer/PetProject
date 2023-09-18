@@ -22,7 +22,7 @@ import { StatusType } from "../../service/request";
 const SavedSearches: React.FC = () => {
     const [status, setStatus] = useState<StatusType>("loading");
 
-    const { supabase } = useSupabase();
+    const { supabase, user } = useSupabase();
 
     const {
         savedSearches,
@@ -33,15 +33,16 @@ const SavedSearches: React.FC = () => {
     } = useSavedSearchesStore();
 
     const fetchSearches = async () => {
-        let { data, error } = await supabase.from("savedSearches").select();
+        let { data, error } = await supabase
+            .from("savedSearches")
+            .select()
+            .eq("user_id", user?.id ?? "");
 
         if (error || !data) {
             setStatus("error");
         } else {
             setSavedSearches(data);
             setStatus("idle");
-
-            console.log(data);
         }
     };
 
@@ -82,8 +83,10 @@ const SavedSearches: React.FC = () => {
     };
 
     useEffect(() => {
-        fetchSearches();
-    }, []);
+        if (user) {
+            fetchSearches();
+        }
+    }, [user]);
 
     useEffect(() => {
         deleteSearch();

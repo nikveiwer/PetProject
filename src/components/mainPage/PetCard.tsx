@@ -8,16 +8,24 @@ import { observer } from "mobx-react-lite";
 import heartIcon from "../../../public/assets/icons/heart.svg";
 import cardBackground from "../../../public/assets/backgrounds/cardBackground.jpg";
 
-import { IPetCard } from "../../types/types";
 import { useEffect, useState } from "react";
+
+import uuid from "uuid4";
 
 import { useSupabase } from "../../config/supabaseClient";
 import { ILikedAnimal, useLikedStore } from "../../store/likedStore/likedStore";
 import { useRouter } from "next/navigation";
 
 type StatusType = "idle" | "error" | "loading" | "saved";
-interface Props extends IPetCard {
+interface Props {
     expanded: boolean;
+    api_id: number;
+    name: string;
+    imagePath: string;
+    likedInfo: string;
+    breed: string;
+    petLink: string;
+    publishedAt: string;
 }
 
 // xl:w-56 lg:w-52 w-[184px] h-[340px]
@@ -36,7 +44,7 @@ interface Props extends IPetCard {
 const PetCard = ({
     imagePath,
     name,
-    id,
+    api_id,
     likedInfo,
     breed,
     petLink,
@@ -73,7 +81,8 @@ const PetCard = ({
         const { data, error } = await supabase
             .from("likedAnimals")
             .delete()
-            .eq("id", id);
+            .eq("api_id", api_id)
+            .eq("user_id", user?.id ?? "");
 
         if (!error) {
             setStatus("idle");
@@ -82,31 +91,59 @@ const PetCard = ({
         }
     };
 
-    const checkAndChangeAddState = () => {
+    const checkAndChangeAddState = async () => {
         if (!user) {
             router.push("authAndReg/SignIn");
             return;
         }
 
         setAdded((added) => !added);
+
+        // await onLikedClick();
     };
 
     useEffect(() => {
-        if (isSaved(id)) setStatus("saved");
+        if (isSaved(api_id)) setStatus("saved");
     }, []);
 
-    useEffect(() => {
+    const onLikedClick = async () => {
         if (status === "idle" && added) {
             const likedData = {
+                id: uuid(),
                 imagePath,
                 name,
-                id,
+                api_id,
                 likedInfo,
                 breed,
                 petLink,
                 publishedAt,
                 likedAt: new Date().toISOString(),
-                user_id: "e5b9d961-27ec-48df-a935-c7d8abad2054",
+                user_id: user?.id ?? "",
+            };
+
+            await sendLikedAnimalInformation(likedData);
+            addLiked(likedData);
+        }
+        if (status === "saved") {
+            await deleteLikedAnimalInformation();
+
+            deleteLiked(api_id);
+        }
+    };
+
+    useEffect(() => {
+        if (status === "idle" && added) {
+            const likedData = {
+                id: uuid(),
+                imagePath,
+                name,
+                api_id,
+                likedInfo,
+                breed,
+                petLink,
+                publishedAt,
+                likedAt: new Date().toISOString(),
+                user_id: user?.id ?? "",
             };
 
             addLiked(likedData);
@@ -114,7 +151,7 @@ const PetCard = ({
             sendLikedAnimalInformation(likedData);
         }
         if (status === "saved") {
-            deleteLiked(id);
+            deleteLiked(api_id);
 
             deleteLikedAnimalInformation();
         }
@@ -187,7 +224,7 @@ const PetCard = ({
                 <span className="sr-only">Loading...</span>
             </div> */}
 
-            <Link href={`/${id}`}>
+            <Link href={`/${api_id}`}>
                 <div>
                     <div className=" h-60">
                         {/* <Image

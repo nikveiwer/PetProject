@@ -1,60 +1,69 @@
-import { ISavedSearches } from '../store/savedSearchesStore/savedSearchesStore';
+import { ISavedSearches } from "../store/savedSearchesStore/savedSearchesStore";
 
-export type Json = string | number | boolean | null | { [key: string]: Json } | Json[];
+export type Json =
+    | string
+    | number
+    | boolean
+    | null
+    | { [key: string]: Json }
+    | Json[];
 
 export interface Database {
     public: {
         Tables: {
             likedAnimals: {
                 Row: {
-                  breed: string
-                  id: number
-                  imagePath: string 
-                  likedAt: string
-                  likedInfo: string
-                  name: string 
-                  petLink: string
-                  publishedAt: string
-                  user_id: string
-                }
+                    breed: string;
+                    id: string;
+                    api_id: number;
+                    imagePath: string;
+                    likedAt: string;
+                    likedInfo: string;
+                    name: string;
+                    petLink: string;
+                    publishedAt: string;
+                    user_id: string;
+                };
                 Insert: {
-                  breed?: string | null
-                  id: number
-                  imagePath?: string | null
-                  likedAt: string
-                  likedInfo?: string | null
-                  name?: string | null
-                  petLink?: string | null
-                  publishedAt: string
-                  user_id?: string
-                }
+                    breed?: string | null;
+                    id: string;
+                    api_id: number;
+                    imagePath?: string | null;
+                    likedAt: string;
+                    likedInfo?: string | null;
+                    name?: string | null;
+                    petLink?: string | null;
+                    publishedAt: string;
+                    user_id?: string;
+                };
                 Update: {
-                  breed?: string | null
-                  id?: number
-                  imagePath?: string | null
-                  likedAt?: string
-                  likedInfo?: string | null
-                  name?: string | null
-                  petLink?: string | null
-                  publishedAt?: string
-                  user_id?: string
-                }
-              },
+                    breed?: string | null;
+                    id: string;
+                    api_id: number;
+                    imagePath?: string | null;
+                    likedAt?: string;
+                    likedInfo?: string | null;
+                    name?: string | null;
+                    petLink?: string | null;
+                    publishedAt?: string;
+                    user_id?: string;
+                };
+            };
             savedSearches: {
                 // Row: ISavedSearches;
                 Row: {
                     type: "cats" | "dogs" | "";
-                    sort: 'random' | 'recent' | '-recent';
+                    sort: "random" | "recent" | "-recent";
                     breed: string;
-                    age: '' | 'baby' | 'young' | 'adult' | 'senior';
-                    size: '' | 'small' | 'medium' | 'large' | 'xlarge';
+                    age: "" | "baby" | "young" | "adult" | "senior";
+                    size: "" | "small" | "medium" | "large" | "xlarge";
                     gender: string;
-                    good_with: '' | 'children' | 'cats' | 'dogs';
+                    good_with: "" | "children" | "cats" | "dogs";
                     coat: string;
                     color: string;
                     name: string;
                     id: string;
-                    user_id: string
+                    user_id: string;
                 };
                 // Insert: Partial<ISavedSearches>;
                 Insert: {
@@ -69,7 +78,7 @@ export interface Database {
                     size?: string;
                     sort?: string;
                     type?: string;
-                    user_id?: string
+                    user_id?: string;
                 };
                 // Update: Partial<ISavedSearches>;
                 Update: {
@@ -84,7 +93,7 @@ export interface Database {
                     size?: string;
                     sort?: string;
                     type?: string;
-                    user_id?: string
+                    user_id?: string;
                 };
             };
         };

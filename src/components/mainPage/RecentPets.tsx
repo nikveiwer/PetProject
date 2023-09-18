@@ -68,7 +68,7 @@ const RecentPets: React.FC = () => {
                         return (
                             <PetCard
                                 key={id}
-                                id={id}
+                                api_id={id}
                                 {...rest}
                                 expanded={false}
                             ></PetCard>

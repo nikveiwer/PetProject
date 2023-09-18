@@ -9,10 +9,12 @@ import { useSavedSearchesStore } from "../../store/savedSearchesStore/savedSearc
 // import supabase from "../../config/supabaseClient";
 import { useSupabase } from "../../config/supabaseClient";
 
+import uuid from "uuid4";
+
 import { ICurrentFilters } from "../../types/types";
 
-import uuid4 from "uuid4";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 type StatusType = "idle" | "error" | "loading" | "successful" | "already";
 type Props = {
@@ -22,26 +24,24 @@ type Props = {
 const AppliedFilters: React.FC<Props> = ({ pet }) => {
     const [status, setStatus] = useState<StatusType>("idle");
 
-    const { supabase } = useSupabase();
+    const { supabase, user } = useSupabase();
 
     const { filters, deleteRequiredFilter, deleteAllFilters } =
         useFiltersStore();
 
-    console.log(filters);
-
-    const { sort, type, ...filtersWithoutSortandType } = filters;
+    const { sort, type, ...filtersWithoutSortAndType } = filters;
 
     const { addSearch, addedSearch } = useSavedSearchesStore();
+
+    const router = useRouter();
 
     const onDelete = (deletedItem: keyof ICurrentFilters) => {
         deleteRequiredFilter(deletedItem);
     };
 
-    let isAnyAppliedFilters = !Object.values(filtersWithoutSortandType).every(
+    let isAnyAppliedFilters = !Object.values(filtersWithoutSortAndType).every(
         (item) => item === ""
     );
-
-    console.log(status);
 
     let fetchAddedSearch = async () => {
         if (addedSearch) {
@@ -72,9 +72,8 @@ const AppliedFilters: React.FC<Props> = ({ pet }) => {
                 .eq("good_with", good_with)
                 .eq("coat", coat)
                 .eq("color", color)
-                .eq("name", name);
-
-            console.log(isAlreadyExist.data);
+                .eq("name", name)
+                .eq("user_id", user?.id ?? "");
 
             if (!isAlreadyExist.error) {
                 if (isAlreadyExist.data && isAlreadyExist.data.length) {
@@ -85,7 +84,6 @@ const AppliedFilters: React.FC<Props> = ({ pet }) => {
                         .insert([addedSearch]);
 
                     if (!error) {
-                        5;
                         setStatus("successful");
                     } else {
                         setStatus("error");
@@ -95,6 +93,20 @@ const AppliedFilters: React.FC<Props> = ({ pet }) => {
                 setStatus("error");
             }
         }
+    };
+
+    const onAddSearch = () => {
+        if (!user) {
+            router.push("authAndReg/SignIn");
+            return;
+        }
+
+        addSearch({
+            id: uuid(),
+            ...filters,
+            type: pet,
+            user_id: user?.id ?? "",
+        });
     };
 
     useEffect(() => {
@@ -113,7 +125,7 @@ const AppliedFilters: React.FC<Props> = ({ pet }) => {
         <div className=" max-w-[750px] px-3">
             <h4 className=" mb-3 text-sm">Filters Applied</h4>
             <div className=" flex justify-start gap-2 flex-wrap">
-                {Object.entries(filtersWithoutSortandType).map(
+                {Object.entries(filtersWithoutSortAndType).map(
                     ([key, value]) => {
                         if (value === "") {
                             return;
@@ -163,16 +175,11 @@ const AppliedFilters: React.FC<Props> = ({ pet }) => {
                         className={`${
                             isAnyAppliedFilters || "hidden"
                         } min-h-[25px] rounded-4xl bg-red-300 px-2 text-center text-white`}
-                        onClick={() =>
-                            addSearch({
-                                id: uuid4(),
-                                ...filters,
-                                type: pet,
-                                user_id: "e5b9d961-27ec-48df-a935-c7d8abad2054",
-                            })
-                        }
+                        onClick={onAddSearch}
                     >
-                        Save this search
+                        {user
+                            ? "Save this search"
+                            : "Log In or Sign Up to be able to save searches"}
                     </button>
                 )}
 

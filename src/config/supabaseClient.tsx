@@ -43,19 +43,12 @@ export default function SupabaseProvider({
         const {
             data: { subscription },
         } = supabase.auth.onAuthStateChange((event, session) => {
-            router.refresh();
-
-            console.log("Event happen", event);
-
-            if (event === "SIGNED_IN") {
-                router.back();
-            }
-
             if (event === "SIGNED_OUT") {
                 router.push("/");
             }
 
-            console.log(user);
+            router.refresh();
+
             setUser(session?.user);
         });
 

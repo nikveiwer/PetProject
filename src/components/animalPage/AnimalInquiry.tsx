@@ -1,12 +1,13 @@
 "use client";
 
 import { Icon } from "@iconify/react";
+import { useRouter } from "next/navigation";
+import uuid from "uuid4";
 import { useEffect, useState } from "react";
 import { useSupabase } from "../../config/supabaseClient";
 import { useLikedStore, ILikedAnimal } from "../../store/likedStore/likedStore";
 
 import { IPetCard } from "../../types/types";
-import { IPetInformation } from "../../types/types";
 
 interface Props extends IPetCard {}
 
@@ -15,7 +16,8 @@ type StatusType = "idle" | "error" | "loading" | "saved";
 const AnimalInquiry: React.FC<Props> = (props) => {
     const { name, petLink, id } = props;
 
-    const { supabase } = useSupabase();
+    const { supabase, user } = useSupabase();
+    const router = useRouter();
 
     const [likedStatus, setLikedStatus] = useState<StatusType>("idle");
     const [added, setAdded] = useState<boolean>(false);
@@ -45,13 +47,23 @@ const AnimalInquiry: React.FC<Props> = (props) => {
         const { data, error } = await supabase
             .from("likedAnimals")
             .delete()
-            .eq("id", id);
+            .eq("api_id", id)
+            .eq("user_id", user?.id ?? "");
 
         if (!error) {
             setLikedStatus("idle");
         } else {
             setLikedStatus("error");
         }
+    };
+
+    const checkAndChangeAddState = () => {
+        if (!user) {
+            router.push("authAndReg/SignIn");
+            return;
+        }
+
+        setAdded((added) => !added);
     };
 
     useEffect(() => {
@@ -65,7 +77,9 @@ const AnimalInquiry: React.FC<Props> = (props) => {
             const likedData = {
                 ...props,
                 likedAt: new Date().toISOString(),
-                user_id: "e5b9d961-27ec-48df-a935-c7d8abad2054",
+                user_id: user?.id ?? "",
+                api_id: id,
+                id: uuid(),
             };
 
             addLiked(likedData);
@@ -95,7 +109,7 @@ const AnimalInquiry: React.FC<Props> = (props) => {
 
             {likedStatus === "idle" && (
                 <button
-                    onClick={() => setAdded((add) => !add)}
+                    onClick={checkAndChangeAddState}
                     className=" w-full px-3 py-2 flex justify-center items-center gap-2 text-sm font-medium text-center text-white uppercase bg-red-300 rounded-lg hover:bg-red-400 transition-all focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                 >
                     <div>add to favorites</div>

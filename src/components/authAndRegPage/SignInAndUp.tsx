@@ -73,6 +73,14 @@ export const SignInAndUp: React.FC<{ type: string }> = ({ type }) => {
             errors.username = "Username must contain at least 5 symbols";
         }
 
+        if (username.length > 20) {
+            errors.username = "Username can contain only 20 symbols";
+        }
+
+        if (username.includes(" ")) {
+            errors.username = "Username must be without spaces";
+        }
+
         const validateEmailRegex = /^\S+@\S+\.\S+$/;
         if (!validateEmailRegex.test(email)) {
             errors.email = "Incorrect email";
@@ -139,11 +147,12 @@ export const SignInAndUp: React.FC<{ type: string }> = ({ type }) => {
             },
         });
 
-        console.log("Sign up response", response);
-
         if (response.error) {
             setAuthError(response.error.message);
+            return;
         }
+
+        router.push("/");
     };
 
     const signIn = async () => {
@@ -152,11 +161,11 @@ export const SignInAndUp: React.FC<{ type: string }> = ({ type }) => {
             password,
         });
 
-        console.log("Log in response", response);
-
         if (response.error) {
             setAuthError(response.error.message);
+            return;
         }
+        router.back();
     };
 
     return (

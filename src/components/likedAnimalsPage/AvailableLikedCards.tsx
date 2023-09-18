@@ -47,8 +47,10 @@ const AvailableLikedCards: React.FC = () => {
     };
 
     useEffect(() => {
-        fetchLikedPets();
-    }, [sortLiked]);
+        if (user) {
+            fetchLikedPets();
+        }
+    }, [sortLiked, user]);
 
     if (status === "idle" && !numberOfLiked) {
         return <NoLikedWindow />;
@@ -66,11 +68,11 @@ const AvailableLikedCards: React.FC = () => {
         case "idle":
             return (
                 <div className="  py-9 px-3 grid min-[1630px]:grid-cols-4 lg:grid-cols-3 min-[873px]:grid-cols-4 min-[683px]:grid-cols-3 min-[455px]:grid-cols-2 grid-cols-1  grid-rows-3 auto-rows-auto justify-between justify-items-center gap-7 ">
-                    {likedAnimals.map(({ id, ...rest }) => {
+                    {likedAnimals.map(({ api_id, id, ...rest }) => {
                         return (
                             <PetCard
-                                key={id}
-                                id={id}
+                                key={api_id}
+                                api_id={api_id}
                                 {...rest}
                                 expanded
                             ></PetCard>
