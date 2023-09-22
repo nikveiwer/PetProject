@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import AccauntLinks from "../../src/components/accountFeaturesPage/AccauntLinks";
+
 export default function AccountFeaturesLayout({
     children,
 }: {
@@ -11,18 +13,7 @@ export default function AccountFeaturesLayout({
                 <span className=" text-4xl text-gray-700">
                     Account Feauters
                 </span>
-                <div className="mt-5 pb-3 w-full flex justify-start border-b-[1px] border-gray-700 ">
-                    <div className="px-3 pb-2 hover:border-red-300 border-b-[3px] border-white text-gray-700 transition-all ">
-                        <Link href={"/accountFeatures/accountInfo"}>
-                            Account Info
-                        </Link>
-                    </div>
-                    <div className="px-3 pb-2 hover:border-red-300 border-b-[3px] border-white text-gray-700 transition-all">
-                        <Link href={"/accountFeatures/savedSearches"}>
-                            Saved Searches
-                        </Link>
-                    </div>
-                </div>
+                <AccauntLinks />
                 {children}
             </div>
         </section>

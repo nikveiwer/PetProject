@@ -90,7 +90,7 @@ const ProfilePart: React.FC = () => {
         return (
             <div className=" flex items-center relative">
                 <div className="mr-5 cursor-pointer  hover:border-red-300 border-[1px] border-white rounded-lg transition-all">
-                    <Link href={"/likedAnimals"}>
+                    <Link href={"/likedAnimals"} title={"Your liked pets"}>
                         <Image
                             width={48}
                             height={48}

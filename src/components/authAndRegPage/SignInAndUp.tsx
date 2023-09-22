@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useSupabase } from "../../config/supabaseClient";
 import { MainInput } from "../Inputs/MainInput";
-import { AuthButtons } from "./AuthButtons";
 
 export type ErrorMessages = {
     email?: string;
@@ -170,7 +169,7 @@ export const SignInAndUp: React.FC<{ type: string }> = ({ type }) => {
 
     return (
         <section className="flex min-h-[calc(100vh-153px)] flex-col justify-center px-6 pb-12 lg:px-8 bg-red-300">
-            <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm px-8 py-3 bg-white rounded-lg">
+            <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm px-8 pt-3 pb-5 bg-white rounded-lg">
                 <div className="mb-5 sm:mx-auto sm:w-full sm:max-w-sm">
                     <h2 className="text-center text-2xl font-bold leading-9 tracking-tight text-gray-700">
                         {type === "SignIn"
@@ -275,8 +274,6 @@ export const SignInAndUp: React.FC<{ type: string }> = ({ type }) => {
                         </div>
                     </div>
                 </form>
-
-                <AuthButtons></AuthButtons>
             </div>
         </section>
     );

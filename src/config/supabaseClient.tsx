@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation";
 
 import type { SupabaseClient } from "@supabase/auth-helpers-nextjs";
 import type { Database } from "../types/supabase";
-import { AuthChangeEvent, User } from "@supabase/supabase-js";
+import { User } from "@supabase/supabase-js";
 
 type SupabaseContext = {
     supabase: SupabaseClient<Database>;
@@ -29,7 +29,9 @@ export default function SupabaseProvider({
 }: {
     children: React.ReactNode;
 }) {
-    const [supabase] = useState(() => createBrowserSupabaseClient());
+    const [supabase] = useState(() =>
+        createBrowserSupabaseClient({ supabaseKey, supabaseUrl })
+    );
     const [user, setUser] = useState<User | undefined | null>(undefined);
     const router = useRouter();
 
@@ -75,6 +77,5 @@ export const useSupabase = () => {
         throw new Error("useSupabase must be used inside SupabaseProvider");
     }
 
-    console.log(context);
     return context;
 };
