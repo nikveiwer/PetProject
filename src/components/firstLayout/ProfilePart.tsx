@@ -21,7 +21,8 @@ import { ILikedAnimal, useLikedStore } from "../../store/likedStore/likedStore";
 import { usePathname } from "next/navigation";
 
 const ProfilePart: React.FC = () => {
-    const { accessToken, setAPIAuthData, accessTimeLeft } = useAuthStore();
+    const { accessToken, setAPIAuthData, username, setUsername } =
+        useAuthStore();
     const { supabase, user } = useSupabase();
     const { loadLiked } = useLikedStore();
     const pathname = usePathname();
@@ -83,6 +84,7 @@ const ProfilePart: React.FC = () => {
     useEffect(() => {
         if (user) {
             fetchLikedPets();
+            setUsername(user.user_metadata?.username);
         }
     }, [user]);
 
@@ -114,8 +116,7 @@ const ProfilePart: React.FC = () => {
                         ></Image>
                     </div>
                     <div className=" pl-5 text-lg text-gray-700">
-                        nikveiwer dfvdfvf
-                        {user.user_metadata.username}
+                        {username}
                     </div>
                 </button>
                 <ul
@@ -128,19 +129,19 @@ const ProfilePart: React.FC = () => {
                         className="py-1 hover:border-red-300 border-[1px] border-white rounded-lg"
                         role="none"
                     >
-                        <a
-                            href="#"
+                        <Link
+                            href="/accountFeatures/accountInfo"
                             className="text-gray-700 block px-4 py-2 text-sm"
                             role="menuitem"
                             id="menu-item-0"
                         >
                             Edit
-                        </a>
+                        </Link>
                     </li>
                     <li className="py-1 hover:border-red-300 border-[1px] border-white rounded-lg">
                         <Link
                             className="text-gray-700 block px-4 py-2 text-sm"
-                            href="accountFeatures/savedSearches"
+                            href="/accountFeatures/savedSearches"
                         >
                             Saved Searches
                         </Link>
@@ -172,14 +173,14 @@ const ProfilePart: React.FC = () => {
             <div>
                 <span>
                     <Link
-                        href="authAndReg/SignIn"
+                        href="/authAndReg/SignIn"
                         className=" text-lg text-red-300 underline"
                     >
                         Sign In
                     </Link>
                     {" or "}
                     <Link
-                        href="authAndReg/SignUp"
+                        href="/authAndReg/SignUp"
                         className=" text-lg text-red-300 underline"
                     >
                         Sign Up

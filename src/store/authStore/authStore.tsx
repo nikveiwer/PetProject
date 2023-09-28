@@ -2,8 +2,7 @@ import { makeAutoObservable } from "mobx";
 
 import { createContext, useContext } from "react";
 
-import {IAuthAPI} from "../../types/types"
-
+import { IAuthAPI } from "../../types/types";
 
 export default class AuthStore {
     constructor() {
@@ -12,14 +11,20 @@ export default class AuthStore {
 
     accessToken: string = "";
     accessTimeLeft: number = 0;
+    username: string = "";
 
-    setAPIAuthData = ({ access_token, expires_in}: IAuthAPI) => {
+    setUsername = (newUsername: string) => {
+        this.username = newUsername;
+    };
+
+    setAPIAuthData = ({ access_token, expires_in }: IAuthAPI) => {
         this.accessToken = access_token;
         this.accessTimeLeft = expires_in;
-    }
-
+    };
 }
 
-export const AuthStoreContext = createContext<AuthStore>(null as  unknown as AuthStore)
+export const AuthStoreContext = createContext<AuthStore>(
+    null as unknown as AuthStore
+);
 
 export const useAuthStore = () => useContext(AuthStoreContext);

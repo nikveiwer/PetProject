@@ -10,7 +10,8 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 // export default supabase;
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
+// import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
 
 import type { SupabaseClient } from "@supabase/auth-helpers-nextjs";
@@ -30,7 +31,7 @@ export default function SupabaseProvider({
     children: React.ReactNode;
 }) {
     const [supabase] = useState(() =>
-        createBrowserSupabaseClient({ supabaseKey, supabaseUrl })
+        createClientComponentClient({ supabaseKey, supabaseUrl })
     );
     const [user, setUser] = useState<User | undefined | null>(undefined);
     const router = useRouter();
