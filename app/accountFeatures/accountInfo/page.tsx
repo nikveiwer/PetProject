@@ -7,9 +7,9 @@ import { MainInput } from "../../../src/components/Inputs/MainInput";
 
 import { changeUsername } from "../../actions/accountActions";
 
-export default async function AccountInfo() {
-    const supabase = createServerComponentClient({ cookies });
+const supabase = createServerComponentClient({ cookies });
 
+export default async function AccountInfo() {
     const { data } = await supabase.auth.getSession();
 
     if (!data.session?.user) {

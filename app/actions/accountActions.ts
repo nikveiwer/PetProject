@@ -1,7 +1,6 @@
 "use server";
 
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
 import { z } from "zod";
@@ -20,6 +19,4 @@ export async function changeUsername(username: string): Promise<string> {
     } catch (e: any) {
         return e?.issues[0]?.message ?? e.message;
     }
-
-    // await supabase.auth.updateUser()
 }
